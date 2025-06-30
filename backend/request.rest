@@ -1,0 +1,284 @@
+### Get all Categories
+GET http://localhost:8000/api/categories
+Accept: application/json
+
+### Get Category by ID
+GET http://localhost:8000/api/categories/1
+Accept: application/json
+
+### Create a new Category
+POST http://localhost:8000/api/categories
+Content-Type: application/json
+
+{
+  "nomCategorie": "Fruités"
+}
+
+### Update a Category
+PUT http://localhost:8000/api/categories/4
+Content-Type: application/json
+
+{
+  "nomCategorie": "Mocktails"
+}
+
+### Delete a Category
+DELETE http://localhost:8000/api/categories/4
+
+
+
+
+
+---
+### Get all Ingredients
+GET http://localhost:8000/api/ingredients
+Accept: application/json
+
+### Create a new Ingredient
+POST http://localhost:8000/api/ingredients
+Content-Type: application/json
+
+{
+  "nomIngredient": "Sirop de sucre de Canne"
+}
+
+### Delete a Ingredient
+DELETE http://localhost:8000/api/ingredients/16
+
+
+
+
+
+---
+
+### Get all Tailles
+GET http://localhost:8000/api/tailles
+Accept: application/json
+
+### Create a new Taille (valid)
+POST http://localhost:8000/api/tailles
+Content-Type: application/json
+
+{
+  "nomTaille": "XL"
+}
+
+### Delete a Taille
+DELETE http://localhost:8000/api/tailles/5
+
+
+
+
+
+
+---
+### Get all Utilisateurs
+GET http://localhost:8000/utilisateurs
+Accept: application/json
+
+### Create a new Utilisateur
+POST http://localhost:8000/utilisateurs
+Content-Type: application/json
+
+{
+  "nomUtilisateur": "testuser",
+  "motDePasse": "password123",
+  "roleUtilisateur": "Client"
+}
+
+### Delete Utilisateur
+DELETE http://localhost:8000/utilisateurs/4
+
+
+
+
+
+---
+### Get all Cocktails
+GET http://localhost:8000/api/cocktails
+Accept: application/json
+
+### Get Cocktail by ID
+GET http://localhost:8000/api/cocktails/1
+Accept: application/json
+
+### Create a new Cocktail
+# NOTE: Replace id_categorie and id_createur_utilisateur with actual IDs from your DB
+POST http://localhost:8000/api/cocktails
+Content-Type: application/json
+
+{
+  "nomCocktail": "Cosmopolitan",
+  "descriptionCocktail": "Un cocktail classique à la vodka.",
+  "categorie": {
+    "idCategorie": 1
+  },
+  "createur": {
+    "idUtilisateur": 2
+  }
+}
+
+### Update a Cocktail
+PUT http://localhost:8000/api/cocktails/1
+Content-Type: application/json
+
+{
+  "nomCocktail": "Mojito Royal",
+  "descriptionCocktail": "Un Mojito avec une touche de champagne !",
+  "categorie": {
+    "idCategorie": 1
+  },
+  "createur": {
+    "idUtilisateur": 2
+  }
+}
+
+
+
+
+
+---
+### Get all Cocktail-Ingredients
+GET http://localhost:8000/api/cocktail-ingredients
+Accept: application/json
+
+### Get specific Cocktail-Ingredient (e.g., Cocktail 1, Ingredient 1)
+GET http://localhost:8000/api/cocktail-ingredients/1/1
+Accept: application/json
+
+### Get Ingredients for a specific Cocktail (e.g., Cocktail 1)
+GET http://localhost:8000/api/cocktail-ingredients/cocktail/1
+Accept: application/json
+
+### Add an Ingredient to a Cocktail (e.g., Cocktail 1, Ingredient 14 - Glaçons)
+# NOTE: Use IDs that exist in your DB for cocktail and ingredient
+POST http://localhost:8000/api/cocktail-ingredients
+Content-Type: application/json
+
+{
+  "cocktail": {
+    "idCocktail": 1
+  },
+  "ingredient": {
+    "idIngredient": 14
+  },
+  "quantite": 2.0,
+  "unite": "cubes"
+}
+
+### Update Cocktail-Ingredient quantity (e.g., Cocktail 1, Ingredient 14)
+PUT http://localhost:8000/api/cocktail-ingredients/1/14
+Content-Type: application/json
+
+{
+  "quantite": 3.0,
+  "unite": "cubes"
+}
+
+### Delete a Cocktail-Ingredient (e.g., Cocktail 1, Ingredient 14)
+DELETE http://localhost:8000/api/cocktail-ingredients/1/14
+
+
+
+
+
+---
+### Get all Cocktail-Taille-Prix
+GET http://localhost:8000/api/cocktail-taille-prix
+Accept: application/json
+
+### Add a price for a Cocktail Size (e.g., Cocktail 1, Taille 3 (L))
+# NOTE: Use IDs that exist in your DB for cocktail and taille
+POST http://localhost:8000/api/cocktail-taille-prix
+Content-Type: application/json
+
+{
+  "cocktail": {
+    "idCocktail": 1
+  },
+  "taille": {
+    "idTaille": 3
+  },
+  "prix": 11.50
+}
+
+### Update a Cocktail-Taille-Prix (e.g., Cocktail 1, Taille 3)
+PUT http://localhost:8000/api/cocktail-taille-prix/1/3
+Content-Type: application/json
+
+{
+  "prix": 12.00
+}
+
+### Delete a Cocktail-Taille-Prix (e.g., Cocktail 1, Taille 3)
+DELETE http://localhost:8000/api/cocktail-taille-prix/1/3
+
+
+
+
+
+---
+### Get all Commandes
+GET http://localhost:8000/api/commandes
+Accept: application/json
+
+### Get Commande by ID
+GET http://localhost:8000/api/commandes/1
+Accept: application/json
+
+### Create a new Commande
+# NOTE: Use an existing Utilisateur ID
+POST http://localhost:8000/api/commandes
+Content-Type: application/json
+
+{
+  "statutCommande": "Nouvelle",
+  "utilisateur": {
+    "idUtilisateur": 1
+  }
+}
+
+### Update a Commande
+PUT http://localhost:8000/api/commandes/1
+Content-Type: application/json
+
+{
+  "statutCommande": "Terminée"
+}
+
+
+
+
+
+---
+### Get all LigneCommandes
+GET http://localhost:8000/api/ligne-commandes
+Accept: application/json
+
+### Create a new LigneCommande
+# NOTE: Use existing IDs for commande, cocktail, taille
+POST http://localhost:8000/api/ligne-commandes
+Content-Type: application/json
+
+{
+  "commande": {
+    "idCommande": 1
+  },
+  "cocktail": {
+    "idCocktail": 1
+  },
+  "taille": {
+    "idTaille": 1
+  },
+  "quantite": 1,
+  "statutCocktailPreparation": "En attente"
+}
+
+### Update a LigneCommande
+PUT http://localhost:8000/api/ligne-commandes/1
+Content-Type: application/json
+
+{
+  "quantite": 2,
+  "statutCocktailPreparation": "Préparé"
+}
