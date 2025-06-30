@@ -2,6 +2,7 @@ package com.cocktailbar.backend.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +29,15 @@ public class CommandeController {
     private CommandeRepository commandeRepository;
 
     @Autowired
-    private UtilisateurRepository utilisateurRepository; // Pour vérifier l'utilisateur associé à la commande
+    private UtilisateurRepository utilisateurRepository;
 
-    // --- Endpoint 1: Récupérer toutes les commandes ---
+    // Récupérer toutes les commandes
     @GetMapping
     public List<Commande> getAllCommandes() {
         return commandeRepository.findAll();
     }
 
-    // --- Endpoint 2: Récupérer une commande par son ID ---
+    // Récupérer une commande par son ID
     @GetMapping("/{id}")
     public ResponseEntity<Commande> getCommandeById(@PathVariable Integer id) {
         Optional<Commande> commande = commandeRepository.findById(id);
@@ -44,18 +45,18 @@ public class CommandeController {
                        .orElse(ResponseEntity.notFound().build());
     }
 
-    // --- Endpoint 3: Créer une nouvelle commande ---
+    // Créer une nouvelle commande
     @PostMapping
-    public ResponseEntity<Commande> createCommande(@RequestBody Commande newCommande) {
+    public ResponseEntity<?> createCommande(@RequestBody Commande newCommande) {
         // Vérifie si l'utilisateur associé à la commande existe
         if (newCommande.getUtilisateur() != null && newCommande.getUtilisateur().getIdUtilisateur() != null) {
             Optional<Utilisateur> utilisateur = utilisateurRepository.findById(newCommande.getUtilisateur().getIdUtilisateur());
             if (utilisateur.isEmpty()) {
-                return ResponseEntity.badRequest().body(null); // Retourne une 400 si l'utilisateur n'existe pas
+                return ResponseEntity.badRequest().body(Map.of("message", "L'utilisateur n'existe pas"));
             }
-            newCommande.setUtilisateur(utilisateur.get()); // Assigne l'entité utilisateur gérée par JPA
+            newCommande.setUtilisateur(utilisateur.get());
         } else {
-            return ResponseEntity.badRequest().body(null); // L'utilisateur est obligatoire pour une commande
+            return ResponseEntity.badRequest().body(Map.of("message", "L'utilisateur est obligatoire pour une commande"));
         }
 
         // Définir la date de commande si elle n'est pas déjà définie dans le JSON
@@ -65,14 +66,14 @@ public class CommandeController {
 
         // Définir le statut initial de la commande
         if (newCommande.getStatutCommande() == null || newCommande.getStatutCommande().isEmpty()) {
-            newCommande.setStatutCommande("Commandée"); // Statut par défaut
+            newCommande.setStatutCommande("Commandée");
         }
 
         Commande savedCommande = commandeRepository.save(newCommande);
         return ResponseEntity.ok(savedCommande);
     }
 
-    // --- Endpoint 4: Mettre à jour une commande existante ---
+    // Mettre à jour une commande existante
     @PutMapping("/{id}")
     public ResponseEntity<Commande> updateCommande(@PathVariable Integer id, @RequestBody Commande updatedCommande) {
         Optional<Commande> existingCommandeOptional = commandeRepository.findById(id);
@@ -95,15 +96,14 @@ public class CommandeController {
             }
             existingCommande.setUtilisateur(utilisateur.get());
         } else if (updatedCommande.getUtilisateur() == null) {
-             // Si le client est explicitement mis à null dans la requête, cela peut être géré ici
-             // existingCommande.setUtilisateur(null); // Décommenter si vous autorisez les commandes sans utilisateur
+            return ResponseEntity.badRequest().body(null); // idUtilisateur ne peut pas être null
         }
 
         Commande savedCommande = commandeRepository.save(existingCommande);
         return ResponseEntity.ok(savedCommande);
     }
 
-    // --- Endpoint 5: Supprimer une commande ---
+    // Supprimer une commande
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCommande(@PathVariable Integer id) {
         if (!commandeRepository.existsById(id)) {

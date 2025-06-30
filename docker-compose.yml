@@ -46,10 +46,10 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/bar_cocktail_db
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: password
+    # environment:
+    #   SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/bar_cocktail_db
+    #   SPRING_DATASOURCE_USERNAME: admin
+    #   SPRING_DATASOURCE_PASSWORD: password
     volumes:
       - ./backend:/app
 
