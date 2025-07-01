@@ -59,7 +59,7 @@ sudo lsof -i :8081
 ---
 
 ## Tests
-Pour lancer les tests, utilisez la commande suivante :
+Pour lancer les tests, utilisez la commande suivante depuis le dossier où se trouve le docker-compose.yml :
 ```bash
 docker compose exec backend-dev ./mvnw clean verify
 ```
