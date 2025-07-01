@@ -7,8 +7,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -26,7 +29,10 @@ import com.cocktailbar.backend.repository.CocktailRepository;
 import com.cocktailbar.backend.repository.CocktailTaillePrixRepository;
 import com.cocktailbar.backend.repository.TailleRepository;
 
-@WebMvcTest(CocktailTaillePrixController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+@WithMockUser(username = "testuserBarmaker", roles = "Barmaker")
 class CocktailTaillePrixControllerTest {
 
     @Autowired
@@ -34,8 +40,10 @@ class CocktailTaillePrixControllerTest {
 
     @MockitoBean
     private CocktailTaillePrixRepository cocktailTaillePrixRepository;
+
     @MockitoBean
     private CocktailRepository cocktailRepository;
+
     @MockitoBean
     private TailleRepository tailleRepository;
 
