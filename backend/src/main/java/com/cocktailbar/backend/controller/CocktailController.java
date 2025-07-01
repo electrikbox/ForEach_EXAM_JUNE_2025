@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,7 @@ public class CocktailController {
 
     // --- Endpoint 3: Créer un nouveau cocktail ---
     @PostMapping
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Cocktail> createCocktail(@RequestBody Cocktail newCocktail) {
         // Logique pour s'assurer que la catégorie et l'utilisateur existent
         if (newCocktail.getCategorie() != null && newCocktail.getCategorie().getIdCategorie() != null) {
@@ -74,6 +76,7 @@ public class CocktailController {
     
     // --- Endpoint 4: Mettre à jour un cocktail existant ---
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Cocktail> updateCocktail(@PathVariable Integer id, @RequestBody Cocktail updatedCocktail) {
         Optional<Cocktail> existingCocktailOptional = cocktailRepository.findById(id);
 
@@ -111,6 +114,7 @@ public class CocktailController {
 
     // --- Endpoint 5: Supprimer un cocktail ---
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Void> deleteCocktail(@PathVariable Integer id) {
         if (!cocktailRepository.existsById(id)) {
             return ResponseEntity.notFound().build();

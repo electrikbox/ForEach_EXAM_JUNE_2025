@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ public class UtilisateurController {
     private UtilisateurRepository utilisateurRepository;
 
     @GetMapping
+    @PreAuthorize("hasRole('Barmaker')")
     public List<UtilisateurDTO> getAllUtilisateurs() {
         return utilisateurRepository.findAll()
                 .stream()
@@ -33,6 +35,7 @@ public class UtilisateurController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<UtilisateurDTO> getUtilisateurById(@PathVariable Integer id) {
         return utilisateurRepository.findById(id)
                 .map(this::convertToDTO)
@@ -41,12 +44,14 @@ public class UtilisateurController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('Barmaker')")
     public UtilisateurDTO createUtilisateur(@RequestBody Utilisateur utilisateur) {
         Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
         return convertToDTO(savedUtilisateur);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Void> deleteUtilisateur(@PathVariable Integer id) {
         if (!utilisateurRepository.existsById(id)) {
             return ResponseEntity.notFound().build();

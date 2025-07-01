@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,7 @@ public class IngredientController {
 
     // --- Endpoint 3: Créer un nouvel ingrédient ---
     @PostMapping
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Ingredient> createIngredient(@RequestBody Ingredient newIngredient) {
         if (newIngredient.getNomIngredient() == null || newIngredient.getNomIngredient().trim().isEmpty()) {
             return ResponseEntity.badRequest().body(null);
@@ -50,6 +52,7 @@ public class IngredientController {
 
     // --- Endpoint 4: Mettre à jour un ingrédient existant ---
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Ingredient> updateIngredient(@PathVariable Integer id, @RequestBody Ingredient updatedIngredient) {
         Optional<Ingredient> existingIngredientOptional = ingredientRepository.findById(id);
 
@@ -68,6 +71,7 @@ public class IngredientController {
 
     // --- Endpoint 5: Supprimer un ingrédient ---
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Void> deleteIngredient(@PathVariable Integer id) {
         if (!ingredientRepository.existsById(id)) {
             return ResponseEntity.notFound().build();

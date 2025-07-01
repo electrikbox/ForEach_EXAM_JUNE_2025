@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,7 @@ public class CategorieController {
 
     // Créer une nouvelle catégorie
     @PostMapping
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Categorie> createCategorie(@RequestBody Categorie newCategorie) {
         // Optionnel: Ajouter une validation pour s'assurer que le nom n'est pas vide
         if (newCategorie.getNomCategorie() == null || newCategorie.getNomCategorie().trim().isEmpty()) {
@@ -51,6 +53,7 @@ public class CategorieController {
 
     // Mettre à jour une catégorie existante
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Categorie> updateCategorie(@PathVariable Integer id, @RequestBody Categorie updatedCategorie) {
         Optional<Categorie> existingCategorieOptional = categorieRepository.findById(id);
 
@@ -70,6 +73,7 @@ public class CategorieController {
 
     // Supprimer une catégorie
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Void> deleteCategorie(@PathVariable Integer id) {
         if (!categorieRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
