@@ -18,8 +18,8 @@ public class Utilisateur {
     @Column(name = "id_utilisateur")
     private Integer idUtilisateur;
 
-    @Column(name = "nom_utilisateur", nullable = false)
-    private String nomUtilisateur;
+    @Column(name = "email_utilisateur", nullable = false)
+    private String emailUtilisateur;
 
     @Column(name = "mot_de_passe", nullable = false)
     private String motDePasse;

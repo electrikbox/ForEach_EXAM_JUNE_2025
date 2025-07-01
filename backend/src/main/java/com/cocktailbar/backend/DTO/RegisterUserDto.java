@@ -1,17 +1,20 @@
 package com.cocktailbar.backend.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class RegisterUserDto {
-    private String nomUtilisateur;
+    private String emailUtilisateur;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String motDePasse;
     private String roleUtilisateur;
 
     public RegisterUserDto() {}
 
-    public String getNomUtilisateur() {
-        return nomUtilisateur;
+    public String getEmailUtilisateur() {
+        return emailUtilisateur;
     }
-    public void setNomUtilisateur(String nomUtilisateur) {
-        this.nomUtilisateur = nomUtilisateur;
+    public void setEmailUtilisateur(String emailUtilisateur) {
+        this.emailUtilisateur = emailUtilisateur;
     }
     public String getMotDePasse() {
         return motDePasse;

@@ -41,12 +41,12 @@ class UtilisateurControllerTest {
     void testGetAllUtilisateurs() throws Exception {
         Utilisateur u = new Utilisateur();
         u.setIdUtilisateur(1);
-        u.setNomUtilisateur("testuser");
+        u.setEmailUtilisateur("testuser");
         Mockito.when(utilisateurRepository.findAll()).thenReturn(List.of(u));
 
         mockMvc.perform(get("/utilisateurs"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].nomUtilisateur").value("testuser"));
+                .andExpect(jsonPath("$[0].emailUtilisateur").value("testuser"));
     }
 
     @Test
@@ -54,14 +54,14 @@ class UtilisateurControllerTest {
     void testCreateUtilisateur() throws Exception {
         Utilisateur u = new Utilisateur();
         u.setIdUtilisateur(1);
-        u.setNomUtilisateur("testuser");
+        u.setEmailUtilisateur("testuser");
         Mockito.when(utilisateurRepository.save(any(Utilisateur.class))).thenReturn(u);
 
         mockMvc.perform(post("/utilisateurs")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"nomUtilisateur\":\"testuser\",\"motDePasse\":\"pass\",\"roleUtilisateur\":\"Client\"}"))
+                .content("{\"emailUtilisateur\":\"testuser\",\"motDePasse\":\"pass\",\"roleUtilisateur\":\"Client\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nomUtilisateur").value("testuser"));
+                .andExpect(jsonPath("$.emailUtilisateur").value("testuser"));
     }
 
     @Test
@@ -69,12 +69,12 @@ class UtilisateurControllerTest {
     void testGetUtilisateurById() throws Exception {
         Utilisateur u = new Utilisateur();
         u.setIdUtilisateur(1);
-        u.setNomUtilisateur("testuser");
+        u.setEmailUtilisateur("testuser");
         Mockito.when(utilisateurRepository.findById(1)).thenReturn(Optional.of(u));
 
         mockMvc.perform(get("/utilisateurs/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nomUtilisateur").value("testuser"));
+                .andExpect(jsonPath("$.emailUtilisateur").value("testuser"));
     }
 
     @Test

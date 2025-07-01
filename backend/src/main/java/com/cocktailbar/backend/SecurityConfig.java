@@ -52,11 +52,11 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(UtilisateurRepository utilisateurRepository) {
         return username -> {
             Utilisateur utilisateur = utilisateurRepository.findAll().stream()
-                .filter(u -> u.getNomUtilisateur().equals(username))
+                .filter(u -> u.getEmailUtilisateur().equals(username))
                 .findFirst()
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé : " + username));
             return org.springframework.security.core.userdetails.User
-                .withUsername(utilisateur.getNomUtilisateur())
+                .withUsername(utilisateur.getEmailUtilisateur())
                 .password(utilisateur.getMotDePasse())
                 .roles(utilisateur.getRoleUtilisateur())
                 .build();

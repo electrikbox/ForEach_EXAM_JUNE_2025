@@ -1,16 +1,16 @@
 package com.cocktailbar.backend.DTO;
 
 public class LoginUserDto {
-    private String nomUtilisateur;
+    private String emailUtilisateur;
     private String motDePasse;
 
     public LoginUserDto() {}
 
-    public String getNomUtilisateur() {
-        return nomUtilisateur;
+    public String getEmailUtilisateur() {
+        return emailUtilisateur;
     }
-    public void setNomUtilisateur(String nomUtilisateur) {
-        this.nomUtilisateur = nomUtilisateur;
+    public void setEmailUtilisateur(String emailUtilisateur) {
+        this.emailUtilisateur = emailUtilisateur;
     }
     public String getMotDePasse() {
         return motDePasse;

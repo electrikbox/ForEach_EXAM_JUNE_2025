@@ -1,15 +1,19 @@
 package com.cocktailbar.backend.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cocktailbar.backend.AuthService;
 import com.cocktailbar.backend.DTO.LoginResponse;
 import com.cocktailbar.backend.DTO.LoginUserDto;
 import com.cocktailbar.backend.DTO.RegisterUserDto;
+import com.cocktailbar.backend.DTO.UtilisateurDTO;
 import com.cocktailbar.backend.model.Utilisateur;
 
 @RestController
@@ -22,14 +26,25 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Utilisateur> register(@RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<UtilisateurDTO> register(@RequestBody RegisterUserDto registerUserDto) {
         Utilisateur utilisateur = authService.register(registerUserDto);
-        return ResponseEntity.ok(utilisateur);
+        UtilisateurDTO dto = new UtilisateurDTO(
+            utilisateur.getIdUtilisateur(),
+            utilisateur.getEmailUtilisateur(),
+            utilisateur.getRoleUtilisateur()
+        );
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginUserDto loginUserDto) {
         LoginResponse response = authService.login(loginUserDto);
         return ResponseEntity.ok(response);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleDataIntegrityViolation(RuntimeException ex) {
+        return ex.getMessage();
     }
 } 

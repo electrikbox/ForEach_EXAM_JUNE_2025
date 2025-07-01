@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 public class UtilisateurDTO {
 
     private Integer idUtilisateur;
-    private String nomUtilisateur;
+    private String emailUtilisateur;
     private String roleUtilisateur;
     
-    public UtilisateurDTO(String nomUtilisateur, String roleUtilisateur) {
-        this.nomUtilisateur = nomUtilisateur;
+    public UtilisateurDTO(String emailUtilisateur, String roleUtilisateur) {
+        this.emailUtilisateur = emailUtilisateur;
         this.roleUtilisateur = roleUtilisateur;
     }
 }

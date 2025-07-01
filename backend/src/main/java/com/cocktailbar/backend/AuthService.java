@@ -29,7 +29,12 @@ public class AuthService {
 
     public Utilisateur register(RegisterUserDto input) {
         Utilisateur utilisateur = new Utilisateur();
-        utilisateur.setNomUtilisateur(input.getNomUtilisateur());
+        utilisateur.setEmailUtilisateur(input.getEmailUtilisateur());
+
+        if (utilisateurRepository.findByEmailUtilisateur(input.getEmailUtilisateur()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+
         utilisateur.setMotDePasse(passwordEncoder.encode(input.getMotDePasse()));
         utilisateur.setRoleUtilisateur(input.getRoleUtilisateur());
         return utilisateurRepository.save(utilisateur);
@@ -37,7 +42,7 @@ public class AuthService {
 
     public LoginResponse login(LoginUserDto input) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(input.getNomUtilisateur(), input.getMotDePasse())
+                new UsernamePasswordAuthenticationToken(input.getEmailUtilisateur(), input.getMotDePasse())
         );
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String jwt = jwtService.generateToken(userDetails);

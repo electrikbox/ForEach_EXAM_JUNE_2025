@@ -63,7 +63,7 @@ public class UtilisateurController {
     private UtilisateurDTO convertToDTO(Utilisateur utilisateur) {
         return new UtilisateurDTO(
                 utilisateur.getIdUtilisateur(),
-                utilisateur.getNomUtilisateur(),
+                utilisateur.getEmailUtilisateur(),
                 utilisateur.getRoleUtilisateur()
         );
     }

@@ -1,7 +1,15 @@
-@token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlckJhcm1ha2VyIiwiaWF0IjoxNzUxMzU5NjI3LCJleHAiOjE3NTEzNjMyMjd9.pgjgHmz7Q8GImU_70fr3RNcm8mKhrhYF2ZcFsEnZPqA
+@token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlckJhcm1ha2VyQGJhci5jb20iLCJpYXQiOjE3NTEzNzQxODMsImV4cCI6MTc1MTM3Nzc4M30.cpcO3eAEyOWQFtU2WBVHDZWR-G_8-pU3Dutd1QUoyVU
 
 
-### CATEGORIES
+
+
+
+######################################################################## CATEGORIES
+
+
+
+
+
 GET http://localhost:8000/api/categories
 Authorization: Bearer {{token}}
 
@@ -33,11 +41,14 @@ Authorization: Bearer {{token}}
 
 
 
-########################################################################
+
+
+######################################################################## COCKTAILS
 
 
 
-### COCKTAILS
+
+
 GET http://localhost:8000/api/cocktails
 Authorization: Bearer {{token}}
 
@@ -75,11 +86,14 @@ Authorization: Bearer {{token}}
 
 
 
-########################################################################
+
+
+######################################################################## COCKTAIL-INGREDIENTS
 
 
 
-### COCKTAIL-INGREDIENTS
+
+
 GET http://localhost:8000/api/cocktail-ingredients
 Authorization: Bearer {{token}}
 
@@ -119,11 +133,14 @@ Authorization: Bearer {{token}}
 
 
 
-########################################################################
+
+
+######################################################################## COCKTAIL-TAILLE-PRIX
 
 
 
-### COCKTAIL-TAILLE-PRIX
+
+
 GET http://localhost:8000/api/cocktail-taille-prix
 Authorization: Bearer {{token}}
 
@@ -156,11 +173,14 @@ DELETE http://localhost:8000/api/cocktail-taille-prix/1/2
 
 
 
-########################################################################
+
+
+######################################################################## COMMANDES
 
 
 
-### COMMANDES
+
+
 GET http://localhost:8000/api/commandes
 Authorization: Bearer {{token}}
 
@@ -192,11 +212,14 @@ Authorization: Bearer {{token}}
 
 
 
-########################################################################
+
+
+######################################################################## TAILLES
 
 
 
-### TAILLES
+
+
 GET http://localhost:8000/api/tailles
 Authorization: Bearer {{token}}
 
@@ -206,11 +229,10 @@ Authorization: Bearer {{token}}
 
 
 
-########################################################################
 
 
+######################################################################## UTILISATEURS
 
-### UTILISATEURS
 GET http://localhost:8000/utilisateurs
 Authorization: Bearer {{token}}
 
@@ -224,22 +246,25 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "nomUtilisateur": "testuser",
+  "emailUtilisateur": "testuser@bar.com",
   "motDePasse": "password123",
   "roleUtilisateur": "Client"
 }
 
 ### Delete a Utilisateur
-DELETE http://localhost:8000/utilisateurs/5
+DELETE http://localhost:8000/utilisateurs/4
 Authorization: Bearer {{token}}
 
 
 
-########################################################################
+
+
+######################################################################## INGREDIENTS
 
 
 
-### INGREDIENTS
+
+
 GET http://localhost:8000/api/ingredients
 Authorization: Bearer {{token}}
 
@@ -270,11 +295,14 @@ DELETE http://localhost:8000/api/ingredients/17
 
 
 
-########################################################################
+
+
+######################################################################## LIGNE-COMMANDES
 
 
 
-### LIGNE-COMMANDES
+
+
 GET http://localhost:8000/api/ligne-commandes
 Authorization: Bearer {{token}}
 
@@ -309,14 +337,20 @@ DELETE http://localhost:8000/api/ligne-commandes/1
 
 
 
-########################################################################
 
-### AUTH - Register
+
+######################################################################## AUTH
+
+
+
+
+
+### Register
 POST http://localhost:8000/auth/register
 Content-Type: application/json
 
 {
-  "nomUtilisateur": "testuserBarmaker",
+  "emailUtilisateur": "testuserBarmaker@bar.com",
   "motDePasse": "password123",
   "roleUtilisateur": "Barmaker"
 }
@@ -326,6 +360,6 @@ POST http://localhost:8000/auth/login
 Content-Type: application/json
 
 {
-  "nomUtilisateur": "testuserBarmaker",
+  "emailUtilisateur": "testuserBarmaker@bar.com",
   "motDePasse": "password123"
 }
