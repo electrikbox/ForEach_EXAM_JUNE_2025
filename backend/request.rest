@@ -268,3 +268,22 @@ DELETE http://localhost:8000/api/ligne-commandes/1
 
 
 ########################################################################
+
+### AUTH - Register
+POST http://localhost:8000/auth/register
+Content-Type: application/json
+
+{
+  "nomUtilisateur": "testuser",
+  "motDePasse": "password123",
+  "roleUtilisateur": "Client"
+}
+
+### AUTH - Login
+POST http://localhost:8000/auth/login
+Content-Type: application/json
+
+{
+  "nomUtilisateur": "testuser",
+  "motDePasse": "password123"
+}
