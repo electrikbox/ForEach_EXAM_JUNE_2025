@@ -1,6 +1,7 @@
 package com.cocktailbar.backend.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cocktailbar.backend.DTO.UtilisateurDTO;
 import com.cocktailbar.backend.model.Utilisateur;
 import com.cocktailbar.backend.repository.UtilisateurRepository;
 
@@ -23,18 +25,25 @@ public class UtilisateurController {
     private UtilisateurRepository utilisateurRepository;
 
     @GetMapping
-    public List<Utilisateur> getAllUtilisateurs() {
-        return utilisateurRepository.findAll();
+    public List<UtilisateurDTO> getAllUtilisateurs() {
+        return utilisateurRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Utilisateur getUtilisateurById(@PathVariable Integer id) {
-        return utilisateurRepository.findById(id).orElse(null); // Gérer le cas où l'utilisateur n'est pas trouvé
+    public ResponseEntity<UtilisateurDTO> getUtilisateurById(@PathVariable Integer id) {
+        return utilisateurRepository.findById(id)
+                .map(this::convertToDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Utilisateur createUtilisateur(@RequestBody Utilisateur utilisateur) {
-        return utilisateurRepository.save(utilisateur);
+    public UtilisateurDTO createUtilisateur(@RequestBody Utilisateur utilisateur) {
+        Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
+        return convertToDTO(savedUtilisateur);
     }
 
     @DeleteMapping("/{id}")
@@ -44,5 +53,13 @@ public class UtilisateurController {
         }
         utilisateurRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private UtilisateurDTO convertToDTO(Utilisateur utilisateur) {
+        return new UtilisateurDTO(
+                utilisateur.getIdUtilisateur(),
+                utilisateur.getNomUtilisateur(),
+                utilisateur.getRoleUtilisateur()
+        );
     }
 }
