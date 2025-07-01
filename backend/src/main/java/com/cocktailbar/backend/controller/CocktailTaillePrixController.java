@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +60,7 @@ public class CocktailTaillePrixController {
 
     // --- Endpoint 3: Ajouter un prix pour une taille de cocktail ---
     @PostMapping
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<CocktailTaillePrix> createCocktailTaillePrix(@RequestBody CocktailTaillePrix newCocktailTaillePrix) {
         // Valider l'existence du cocktail et de la taille
         if (newCocktailTaillePrix.getCocktail() == null || newCocktailTaillePrix.getCocktail().getIdCocktail() == null ||
@@ -90,6 +92,7 @@ public class CocktailTaillePrixController {
 
     // --- Endpoint 4: Mettre à jour le prix d'un cocktail pour une taille donnée ---
     @PutMapping("/{cocktailId}/{tailleId}")
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<CocktailTaillePrix> updateCocktailTaillePrix(
             @PathVariable Integer cocktailId,
             @PathVariable Integer tailleId,
@@ -114,6 +117,7 @@ public class CocktailTaillePrixController {
 
     // --- Endpoint 5: Supprimer une entrée de prix par taille pour un cocktail ---
     @DeleteMapping("/{cocktailId}/{tailleId}")
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Void> deleteCocktailTaillePrix(
             @PathVariable Integer cocktailId,
             @PathVariable Integer tailleId) {

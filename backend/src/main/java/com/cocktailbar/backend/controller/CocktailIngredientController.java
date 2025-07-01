@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -78,6 +79,7 @@ public class CocktailIngredientController {
 
     // --- Endpoint 4: Ajouter un ingrédient à un cocktail ---
     @PostMapping
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<CocktailIngredient> createCocktailIngredient(@RequestBody CocktailIngredient newCocktailIngredient) {
         // Valider l'existence du cocktail et de l'ingrédient
         if (newCocktailIngredient.getCocktail() == null || newCocktailIngredient.getCocktail().getIdCocktail() == null ||
@@ -109,6 +111,7 @@ public class CocktailIngredientController {
 
     // --- Endpoint 5: Mettre à jour la quantité/unité d'un ingrédient pour un cocktail ---
     @PutMapping("/{cocktailId}/{ingredientId}")
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<CocktailIngredient> updateCocktailIngredient(
             @PathVariable Integer cocktailId,
             @PathVariable Integer ingredientId,
@@ -134,6 +137,7 @@ public class CocktailIngredientController {
 
     // --- Endpoint 6: Supprimer un ingrédient d'un cocktail ---
     @DeleteMapping("/{cocktailId}/{ingredientId}")
+    @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Void> deleteCocktailIngredient(
             @PathVariable Integer cocktailId,
             @PathVariable Integer ingredientId) {
