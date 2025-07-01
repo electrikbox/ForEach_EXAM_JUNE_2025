@@ -32,18 +32,18 @@ INSERT INTO Taille (nom_taille) VALUES
 ('L');
 
 -- Insertion de données dans la table Utilisateur (pour les clients et les barmakers)
-INSERT INTO Utilisateur (nom_utilisateur, mot_de_passe, role_utilisateur) VALUES
-('client1', 'passclient1', 'Client'),
-('barmaker1', 'passbarmaker1', 'Barmaker'),
-('client2', 'passclient2', 'Client');
+INSERT INTO Utilisateur (email_utilisateur, mot_de_passe, role_utilisateur) VALUES
+('client1@bar.com', 'passclient1', 'Client'),
+('barmaker1@bar.com', 'passbarmaker1', 'Barmaker'),
+('client2@bar.com', 'passclient2', 'Client');
 
 -- Insertion de données dans la table Cocktail
 -- Assurez-vous que les IDs de catégorie et de créateur existent !
 INSERT INTO Cocktail (nom_cocktail, description_cocktail, id_categorie, id_createur_utilisateur) VALUES
-('Mojito', 'Un cocktail rafraîchissant à base de rhum et de menthe.', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE nom_utilisateur = 'barmaker1')),
-('Pina Colada', 'Un cocktail tropical crémeux à base de rhum, ananas et coco.', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Tropical'), (SELECT id_utilisateur FROM Utilisateur WHERE nom_utilisateur = 'barmaker1')),
-('Sex on the Beach', 'Un cocktail fruité et coloré.', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE nom_utilisateur = 'barmaker1')),
-('Virgin Mojito', 'La version sans alcool du célèbre Mojito.', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Sans Alcool'), (SELECT id_utilisateur FROM Utilisateur WHERE nom_utilisateur = 'barmaker1'));
+('Mojito', 'Un cocktail rafraîchissant à base de rhum et de menthe.', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker1')),
+('Pina Colada', 'Un cocktail tropical crémeux à base de rhum, ananas et coco.', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Tropical'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker1')),
+('Sex on the Beach', 'Un cocktail fruité et coloré.', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker1')),
+('Virgin Mojito', 'La version sans alcool du célèbre Mojito.', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Sans Alcool'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker1'));
 
 -- Insertion de données dans la table Cocktail_Ingredient
 -- ID_COCKTAIL, ID_INGREDIENT, QUANTITE, UNITE
@@ -87,9 +87,9 @@ INSERT INTO Cocktail_Taille_Prix (id_cocktail, id_taille, prix) VALUES
 
 -- Insertion de données dans la table Commande
 INSERT INTO Commande (id_commande, id_utilisateur, statut_commande) VALUES
-(1, (SELECT id_utilisateur FROM Utilisateur WHERE nom_utilisateur = 'client_alice'), 'Commandée'),
-(2, (SELECT id_utilisateur FROM Utilisateur WHERE nom_utilisateur = 'client_bob'), 'Commandée'),
-(3, (SELECT id_utilisateur FROM Utilisateur WHERE nom_utilisateur = 'client_alice'), 'en cours de préparation');
+(1, (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'client_alice'), 'Commandée'),
+(2, (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'client_bob'), 'Commandée'),
+(3, (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'client_alice'), 'en cours de préparation');
 
 -- Insertion de données dans la table Ligne_Commande
 INSERT INTO Ligne_Commande (id_commande, id_cocktail, id_taille, quantite, statut_cocktail_preparation) VALUES

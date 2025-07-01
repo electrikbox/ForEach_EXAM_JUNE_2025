@@ -24,7 +24,7 @@ CREATE TABLE Taille (
 -- Création de la table Utilisateur avec un rôle
 CREATE TABLE Utilisateur (
     id_utilisateur SERIAL PRIMARY KEY,
-    nom_utilisateur VARCHAR(100) NOT NULL,
+    email_utilisateur VARCHAR(100) NOT NULL UNIQUE,
     mot_de_passe VARCHAR(255) NOT NULL,
     role_utilisateur VARCHAR(50) CHECK (role_utilisateur IN ('Client', 'Barmaker')) NOT NULL
 );
@@ -32,7 +32,7 @@ CREATE TABLE Utilisateur (
 -- Création de la table Cocktail (avec le barmaker créateur)
 CREATE TABLE Cocktail (
     id_cocktail SERIAL PRIMARY KEY,
-    nom_cocktail VARCHAR(100) NOT NULL,
+    nom_cocktail VARCHAR(100) NOT NULL UNIQUE,
     description_cocktail TEXT,
     id_categorie INT,
     id_createur_utilisateur INT,
