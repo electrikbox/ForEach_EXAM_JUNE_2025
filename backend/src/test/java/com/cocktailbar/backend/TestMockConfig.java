@@ -4,6 +4,8 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
+import com.cocktailbar.backend.service.JwtService;
+
 @TestConfiguration
 public class TestMockConfig {
     @Bean

@@ -67,7 +67,7 @@ class CocktailControllerTest {
 
         mockMvc.perform(get("/api/cocktails/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.idCocktail").value(1));
+                .andExpect(jsonPath("$.cocktail.idCocktail").value(1));
     }
 
     @Test
