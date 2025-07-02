@@ -3,7 +3,6 @@ package com.cocktailbar.backend.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,22 +27,23 @@ import com.cocktailbar.backend.repository.TailleRepository;
 @RequestMapping("/api/cocktail-taille-prix")
 public class CocktailTaillePrixController {
 
-    @Autowired
-    private CocktailTaillePrixRepository cocktailTaillePrixRepository;
+    private final CocktailTaillePrixRepository cocktailTaillePrixRepository;
+    private final CocktailRepository cocktailRepository;
+    private final TailleRepository tailleRepository;
 
-    @Autowired
-    private CocktailRepository cocktailRepository;
+    public CocktailTaillePrixController(CocktailTaillePrixRepository cocktailTaillePrixRepository,
+                                        CocktailRepository cocktailRepository,
+                                        TailleRepository tailleRepository) {
+        this.cocktailTaillePrixRepository = cocktailTaillePrixRepository;
+        this.cocktailRepository = cocktailRepository;
+        this.tailleRepository = tailleRepository;
+    }
 
-    @Autowired
-    private TailleRepository tailleRepository;
-
-    // --- Endpoint 1: Récupérer tous les prix par taille de cocktail ---
     @GetMapping
     public List<CocktailTaillePrix> getAllCocktailTaillePrix() {
         return cocktailTaillePrixRepository.findAll();
     }
 
-    // --- Endpoint 2: Récupérer un prix par taille de cocktail par ID composé ---
     @GetMapping("/{cocktailId}/{tailleId}")
     public ResponseEntity<CocktailTaillePrix> getCocktailTaillePrixById(
             @PathVariable Integer cocktailId,
@@ -58,7 +58,6 @@ public class CocktailTaillePrixController {
                   .orElse(ResponseEntity.notFound().build());
     }
 
-    // --- Endpoint 3: Ajouter un prix pour une taille de cocktail ---
     @PostMapping
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<CocktailTaillePrix> createCocktailTaillePrix(@RequestBody CocktailTaillePrix newCocktailTaillePrix) {
@@ -90,7 +89,6 @@ public class CocktailTaillePrixController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCtp);
     }
 
-    // --- Endpoint 4: Mettre à jour le prix d'un cocktail pour une taille donnée ---
     @PutMapping("/{cocktailId}/{tailleId}")
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<CocktailTaillePrix> updateCocktailTaillePrix(
@@ -115,7 +113,6 @@ public class CocktailTaillePrixController {
         return ResponseEntity.ok(savedCtp);
     }
 
-    // --- Endpoint 5: Supprimer une entrée de prix par taille pour un cocktail ---
     @DeleteMapping("/{cocktailId}/{tailleId}")
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Void> deleteCocktailTaillePrix(

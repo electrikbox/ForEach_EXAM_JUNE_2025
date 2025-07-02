@@ -3,7 +3,6 @@ package com.cocktailbar.backend.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,16 +21,17 @@ import com.cocktailbar.backend.repository.CategorieRepository;
 @RequestMapping("/api/categories")
 public class CategorieController {
 
-    @Autowired
-    private CategorieRepository categorieRepository;
+    private final CategorieRepository categorieRepository;
 
-    // Récupérer toutes les catégories
+    public CategorieController(CategorieRepository categorieRepository) {
+        this.categorieRepository = categorieRepository;
+    }
+
     @GetMapping
     public List<Categorie> getAllCategories() {
         return categorieRepository.findAll();
     }
 
-    // Récupérer une catégorie par son ID
     @GetMapping("/{id}")
     public ResponseEntity<Categorie> getCategorieById(@PathVariable Integer id) {
         Optional<Categorie> categorie = categorieRepository.findById(id);
@@ -39,7 +39,6 @@ public class CategorieController {
                         .orElse(ResponseEntity.notFound().build());
     }
 
-    // Créer une nouvelle catégorie
     @PostMapping
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Categorie> createCategorie(@RequestBody Categorie newCategorie) {
@@ -51,7 +50,6 @@ public class CategorieController {
         return ResponseEntity.ok(savedCategorie);
     }
 
-    // Mettre à jour une catégorie existante
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Categorie> updateCategorie(@PathVariable Integer id, @RequestBody Categorie updatedCategorie) {
@@ -71,7 +69,6 @@ public class CategorieController {
         return ResponseEntity.ok(savedCategorie);
     }
 
-    // Supprimer une catégorie
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Void> deleteCategorie(@PathVariable Integer id) {

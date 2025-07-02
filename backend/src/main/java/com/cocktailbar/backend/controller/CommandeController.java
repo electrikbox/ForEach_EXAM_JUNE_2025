@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,19 +24,20 @@ import com.cocktailbar.backend.repository.UtilisateurRepository;
 @RequestMapping("/api/commandes")
 public class CommandeController {
 
-    @Autowired
-    private CommandeRepository commandeRepository;
+    private final CommandeRepository commandeRepository;
+    private final UtilisateurRepository utilisateurRepository;
 
-    @Autowired
-    private UtilisateurRepository utilisateurRepository;
+    public CommandeController(CommandeRepository commandeRepository,
+                              UtilisateurRepository utilisateurRepository) {
+        this.commandeRepository = commandeRepository;
+        this.utilisateurRepository = utilisateurRepository;
+    }
 
-    // Récupérer toutes les commandes
     @GetMapping
     public List<Commande> getAllCommandes() {
         return commandeRepository.findAll();
     }
 
-    // Récupérer une commande par son ID
     @GetMapping("/{id}")
     public ResponseEntity<Commande> getCommandeById(@PathVariable Integer id) {
         Optional<Commande> commande = commandeRepository.findById(id);
@@ -45,7 +45,6 @@ public class CommandeController {
                        .orElse(ResponseEntity.notFound().build());
     }
 
-    // Créer une nouvelle commande
     @PostMapping
     public ResponseEntity<?> createCommande(@RequestBody Commande newCommande) {
         // Vérifie si l'utilisateur associé à la commande existe
@@ -73,7 +72,6 @@ public class CommandeController {
         return ResponseEntity.ok(savedCommande);
     }
 
-    // Mettre à jour une commande existante
     @PutMapping("/{id}")
     public ResponseEntity<Commande> updateCommande(@PathVariable Integer id, @RequestBody Commande updatedCommande) {
         Optional<Commande> existingCommandeOptional = commandeRepository.findById(id);
@@ -103,7 +101,6 @@ public class CommandeController {
         return ResponseEntity.ok(savedCommande);
     }
 
-    // Supprimer une commande
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCommande(@PathVariable Integer id) {
         if (!commandeRepository.existsById(id)) {

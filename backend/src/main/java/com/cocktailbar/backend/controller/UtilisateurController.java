@@ -3,7 +3,6 @@ package com.cocktailbar.backend.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,8 +21,11 @@ import com.cocktailbar.backend.repository.UtilisateurRepository;
 @RequestMapping("/utilisateurs")
 public class UtilisateurController {
 
-    @Autowired
-    private UtilisateurRepository utilisateurRepository;
+    private final UtilisateurRepository utilisateurRepository;
+
+    public UtilisateurController(UtilisateurRepository utilisateurRepository) {
+        this.utilisateurRepository = utilisateurRepository;
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('Barmaker')")

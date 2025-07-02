@@ -3,7 +3,6 @@ package com.cocktailbar.backend.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,25 +27,26 @@ import com.cocktailbar.backend.repository.TailleRepository;
 @RequestMapping("/api/ligne-commandes")
 public class LigneCommandeController {
 
-    @Autowired
-    private LigneCommandeRepository ligneCommandeRepository;
+    private final LigneCommandeRepository ligneCommandeRepository;
+    private final CommandeRepository commandeRepository;
+    private final CocktailRepository cocktailRepository;
+    private final TailleRepository tailleRepository;
 
-    @Autowired
-    private CommandeRepository commandeRepository;
+    public LigneCommandeController(LigneCommandeRepository ligneCommandeRepository,
+                                   CommandeRepository commandeRepository,
+                                   CocktailRepository cocktailRepository,
+                                   TailleRepository tailleRepository) {
+        this.ligneCommandeRepository = ligneCommandeRepository;
+        this.commandeRepository = commandeRepository;
+        this.cocktailRepository = cocktailRepository;
+        this.tailleRepository = tailleRepository;
+    }
 
-    @Autowired
-    private CocktailRepository cocktailRepository;
-
-    @Autowired
-    private TailleRepository tailleRepository;
-
-    // --- Endpoint 1: Récupérer toutes les lignes de commande ---
     @GetMapping
     public List<LigneCommande> getAllLigneCommandes() {
         return ligneCommandeRepository.findAll();
     }
 
-    // --- Endpoint 2: Récupérer une ligne de commande par son ID ---
     @GetMapping("/{id}")
     public ResponseEntity<LigneCommande> getLigneCommandeById(@PathVariable Integer id) {
         Optional<LigneCommande> ligneCommande = ligneCommandeRepository.findById(id);
@@ -54,7 +54,6 @@ public class LigneCommandeController {
                             .orElse(ResponseEntity.notFound().build());
     }
 
-    // --- Endpoint 3: Créer une nouvelle ligne de commande ---
     @PostMapping
     public ResponseEntity<LigneCommande> createLigneCommande(@RequestBody LigneCommande newLineCommande) {
         // Valider l'existence de la commande, du cocktail et de la taille
@@ -79,14 +78,13 @@ public class LigneCommandeController {
 
         // Définir le statut initial de préparation si non fourni
         if (newLineCommande.getStatutCocktailPreparation() == null || newLineCommande.getStatutCocktailPreparation().isEmpty()) {
-            newLineCommande.setStatutCocktailPreparation("En attente"); // Statut par défaut
+            newLineCommande.setStatutCocktailPreparation("Commandée"); // Statut par défaut
         }
 
         LigneCommande savedLigneCommande = ligneCommandeRepository.save(newLineCommande);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedLigneCommande);
     }
 
-    // --- Endpoint 4: Mettre à jour une ligne de commande existante ---
     @PutMapping("/{id}")
     public ResponseEntity<LigneCommande> updateLigneCommande(@PathVariable Integer id, @RequestBody LigneCommande updatedLigneCommande) {
         Optional<LigneCommande> existingLigneCommandeOptional = ligneCommandeRepository.findById(id);
@@ -109,7 +107,6 @@ public class LigneCommandeController {
         return ResponseEntity.ok(savedLigneCommande);
     }
 
-    // --- Endpoint 5: Supprimer une ligne de commande ---
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLigneCommande(@PathVariable Integer id) {
         if (!ligneCommandeRepository.existsById(id)) {

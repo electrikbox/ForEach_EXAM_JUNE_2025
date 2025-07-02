@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.cocktailbar.backend.service.JwtService;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Ignorer les routes publiques
         String path = request.getRequestURI();
         AntPathMatcher pathMatcher = new AntPathMatcher();
-        if (pathMatcher.match("/auth/**", path)) {
+        if (pathMatcher.match("/auth/login", path) || pathMatcher.match("/auth/register", path)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -57,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        final String userEmail = jwtService.extractUsername(jwt);
+        final String userEmail = jwtService.extractEmail(jwt);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (userEmail != null && authentication == null) {

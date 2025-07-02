@@ -3,7 +3,6 @@ package com.cocktailbar.backend.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,16 +21,17 @@ import com.cocktailbar.backend.repository.IngredientRepository;
 @RequestMapping("/api/ingredients")
 public class IngredientController {
 
-    @Autowired
-    private IngredientRepository ingredientRepository;
+    private final IngredientRepository ingredientRepository;
 
-    // --- Endpoint 1: Récupérer tous les ingrédients ---
+    public IngredientController(IngredientRepository ingredientRepository) {
+        this.ingredientRepository = ingredientRepository;
+    }
+
     @GetMapping
     public List<Ingredient> getAllIngredients() {
         return ingredientRepository.findAll();
     }
 
-    // --- Endpoint 2: Récupérer un ingrédient par son ID ---
     @GetMapping("/{id}")
     public ResponseEntity<Ingredient> getIngredientById(@PathVariable Integer id) {
         Optional<Ingredient> ingredient = ingredientRepository.findById(id);
@@ -39,7 +39,6 @@ public class IngredientController {
                          .orElse(ResponseEntity.notFound().build());
     }
 
-    // --- Endpoint 3: Créer un nouvel ingrédient ---
     @PostMapping
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Ingredient> createIngredient(@RequestBody Ingredient newIngredient) {
@@ -50,7 +49,6 @@ public class IngredientController {
         return ResponseEntity.ok(savedIngredient);
     }
 
-    // --- Endpoint 4: Mettre à jour un ingrédient existant ---
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Ingredient> updateIngredient(@PathVariable Integer id, @RequestBody Ingredient updatedIngredient) {
@@ -69,7 +67,6 @@ public class IngredientController {
         return ResponseEntity.ok(savedIngredient);
     }
 
-    // --- Endpoint 5: Supprimer un ingrédient ---
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Void> deleteIngredient(@PathVariable Integer id) {

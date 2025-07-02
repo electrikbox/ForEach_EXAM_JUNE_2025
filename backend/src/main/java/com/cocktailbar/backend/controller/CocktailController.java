@@ -3,7 +3,6 @@ package com.cocktailbar.backend.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,28 +30,29 @@ import com.cocktailbar.backend.repository.UtilisateurRepository;
 @RequestMapping("/api/cocktails")
 public class CocktailController {
 
-    @Autowired
-    private CocktailRepository cocktailRepository;
+    private final CocktailRepository cocktailRepository;
+    private final CategorieRepository categorieRepository;
+    private final UtilisateurRepository utilisateurRepository;
+    private final CocktailIngredientRepository cocktailIngredientRepository;
+    private final CocktailTaillePrixRepository cocktailTaillePrixRepository;
 
-    @Autowired
-    private CategorieRepository categorieRepository;
+    public CocktailController(CocktailRepository cocktailRepository,
+                             CategorieRepository categorieRepository,
+                             UtilisateurRepository utilisateurRepository,
+                             CocktailIngredientRepository cocktailIngredientRepository,
+                             CocktailTaillePrixRepository cocktailTaillePrixRepository) {
+        this.cocktailRepository = cocktailRepository;
+        this.categorieRepository = categorieRepository;
+        this.utilisateurRepository = utilisateurRepository;
+        this.cocktailIngredientRepository = cocktailIngredientRepository;
+        this.cocktailTaillePrixRepository = cocktailTaillePrixRepository;
+    }
 
-    @Autowired
-    private UtilisateurRepository utilisateurRepository;
-
-    @Autowired
-    private CocktailIngredientRepository cocktailIngredientRepository;
-
-    @Autowired
-    private CocktailTaillePrixRepository cocktailTaillePrixRepository;
-
-    // --- Endpoint 1: Récupérer tous les cocktails ---
     @GetMapping
     public List<Cocktail> getAllCocktails() {
         return cocktailRepository.findAll();
     }
 
-    // --- Endpoint 2: Récupérer un cocktail par son ID (détaillé) ---
     @GetMapping("/{id}")
     public ResponseEntity<CocktailDetailsDTO> getCocktailById(@PathVariable Integer id) {
         Optional<Cocktail> cocktailOpt = cocktailRepository.findById(id);
@@ -66,7 +66,6 @@ public class CocktailController {
         return ResponseEntity.ok(dto);
     }
 
-    // --- Endpoint 3: Créer un nouveau cocktail ---
     @PostMapping
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Cocktail> createCocktail(@RequestBody Cocktail newCocktail) {
@@ -91,7 +90,6 @@ public class CocktailController {
         return ResponseEntity.ok(savedCocktail);
     }
     
-    // --- Endpoint 4: Mettre à jour un cocktail existant ---
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Cocktail> updateCocktail(@PathVariable Integer id, @RequestBody Cocktail updatedCocktail) {
@@ -129,7 +127,6 @@ public class CocktailController {
         return ResponseEntity.ok(savedCocktail);
     }
 
-    // --- Endpoint 5: Supprimer un cocktail ---
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Void> deleteCocktail(@PathVariable Integer id) {

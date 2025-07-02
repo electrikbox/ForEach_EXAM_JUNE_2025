@@ -3,7 +3,6 @@ package com.cocktailbar.backend.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,24 +27,23 @@ import com.cocktailbar.backend.repository.IngredientRepository;
 @RequestMapping("/api/cocktail-ingredients")
 public class CocktailIngredientController {
 
-    @Autowired
-    private CocktailIngredientRepository cocktailIngredientRepository;
+    private final CocktailIngredientRepository cocktailIngredientRepository;
+    private final CocktailRepository cocktailRepository;
+    private final IngredientRepository ingredientRepository;
 
-    @Autowired
-    private CocktailRepository cocktailRepository;
+    public CocktailIngredientController(CocktailIngredientRepository cocktailIngredientRepository,
+                                        CocktailRepository cocktailRepository,
+                                        IngredientRepository ingredientRepository) {
+        this.cocktailIngredientRepository = cocktailIngredientRepository;
+        this.cocktailRepository = cocktailRepository;
+        this.ingredientRepository = ingredientRepository;
+    }
 
-    @Autowired
-    private IngredientRepository ingredientRepository;
-
-    // --- Endpoint 1: Récupérer tous les liens Cocktail-Ingrédient ---
     @GetMapping
     public List<CocktailIngredient> getAllCocktailIngredients() {
         return cocktailIngredientRepository.findAll();
     }
 
-    // --- Endpoint 2: Récupérer un lien Cocktail-Ingrédient par ID composé ---
-    // Note: Accéder par ID composé dans l'URL est plus complexe. Souvent, on préfère
-    //       récupérer tous les ingrédients pour un cocktail donné (voir le prochain endpoint).
     @GetMapping("/{cocktailId}/{ingredientId}")
     public ResponseEntity<CocktailIngredient> getCocktailIngredientById(
             @PathVariable Integer cocktailId,
@@ -60,7 +58,6 @@ public class CocktailIngredientController {
                  .orElse(ResponseEntity.notFound().build());
     }
 
-    // --- Endpoint 3: Récupérer tous les ingrédients pour un cocktail spécifique ---
     @GetMapping("/cocktail/{cocktailId}")
     public List<CocktailIngredient> getIngredientsForCocktail(@PathVariable Integer cocktailId) {
         // Cette méthode nécessiterait une méthode personnalisée dans CocktailIngredientRepository
@@ -76,8 +73,6 @@ public class CocktailIngredientController {
         // dans CocktailIngredientRepository.
     }
 
-
-    // --- Endpoint 4: Ajouter un ingrédient à un cocktail ---
     @PostMapping
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<CocktailIngredient> createCocktailIngredient(@RequestBody CocktailIngredient newCocktailIngredient) {
@@ -109,7 +104,6 @@ public class CocktailIngredientController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCi);
     }
 
-    // --- Endpoint 5: Mettre à jour la quantité/unité d'un ingrédient pour un cocktail ---
     @PutMapping("/{cocktailId}/{ingredientId}")
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<CocktailIngredient> updateCocktailIngredient(
@@ -135,7 +129,6 @@ public class CocktailIngredientController {
         return ResponseEntity.ok(savedCi);
     }
 
-    // --- Endpoint 6: Supprimer un ingrédient d'un cocktail ---
     @DeleteMapping("/{cocktailId}/{ingredientId}")
     @PreAuthorize("hasRole('Barmaker')")
     public ResponseEntity<Void> deleteCocktailIngredient(

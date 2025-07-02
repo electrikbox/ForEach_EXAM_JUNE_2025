@@ -3,7 +3,6 @@ package com.cocktailbar.backend.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,16 +16,17 @@ import com.cocktailbar.backend.repository.TailleRepository;
 @RequestMapping("/api/tailles")
 public class TailleController {
 
-    @Autowired
-    private TailleRepository tailleRepository;
+    private final TailleRepository tailleRepository;
 
-    // --- Endpoint 1: Récupérer toutes les tailles ---
+    public TailleController(TailleRepository tailleRepository) {
+        this.tailleRepository = tailleRepository;
+    }
+
     @GetMapping
     public List<Taille> getAllTailles() {
         return tailleRepository.findAll();
     }
 
-    // --- Endpoint 2: Récupérer une taille par son ID ---
     @GetMapping("/{id}")
     public ResponseEntity<Taille> getTailleById(@PathVariable Integer id) {
         Optional<Taille> taille = tailleRepository.findById(id);
