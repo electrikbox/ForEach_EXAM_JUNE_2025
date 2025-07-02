@@ -1,4 +1,4 @@
-package com.cocktailbar.backend;
+package com.cocktailbar.backend.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

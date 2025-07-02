@@ -1,4 +1,4 @@
-package com.cocktailbar.backend;
+package com.cocktailbar.backend.service;
 
 import java.security.Key;
 import java.util.Date;
@@ -43,12 +43,12 @@ public class JwtService {
 
     // Vérifie si le token est valide pour cet utilisateur
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        String userEmail = extractEmail(token);
+        return userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
-    // Extrait le username (subject) du token
-    public String extractUsername(String token) {
+    // Extrait le email (subject) du token
+    public String extractEmail(String token) {
         return extractAllClaims(token).getSubject();
     }
 
