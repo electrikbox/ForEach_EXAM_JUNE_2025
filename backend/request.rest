@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlckNsaWVudEBiYXIuY29tIiwiaWF0IjoxNzUxNDQ2MjMzLCJleHAiOjE3NTE0NDk4MzN9.NVz5GdXU5txcz5IcvedLtH8Dpm3e48UqPa3seUWUomU
+@token = eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9DbGllbnQiLCJzdWIiOiJ0ZXN0dXNlckNsaWVudEBiYXIuY29tIiwiaWF0IjoxNzUxNDY2NDE5LCJleHAiOjE3NTE0NzAwMTl9.VZait5NNShv5Ymjm3Fo14oHXWUYRqvahb33uGqxTZrs
 
 
 
@@ -52,7 +52,7 @@ Authorization: Bearer {{token}}
 GET http://localhost:8000/api/cocktails
 Authorization: Bearer {{token}}
 
-### Get Cocktail by ID
+### Get Cocktail by ID (détaillé)
 GET http://localhost:8000/api/cocktails/1
 Authorization: Bearer {{token}}
 
@@ -363,3 +363,7 @@ Content-Type: application/json
   "emailUtilisateur": "testuserClient@bar.com",
   "motDePasse": "password123"
 }
+
+### AUTH - Me
+GET http://localhost:8000/auth/me
+Authorization: Bearer {{token}}

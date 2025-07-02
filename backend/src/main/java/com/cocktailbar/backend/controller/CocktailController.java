@@ -15,11 +15,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cocktailbar.backend.DTO.CocktailDetailsDTO;
 import com.cocktailbar.backend.model.Categorie;
 import com.cocktailbar.backend.model.Cocktail;
+import com.cocktailbar.backend.model.CocktailIngredient;
+import com.cocktailbar.backend.model.CocktailTaillePrix;
 import com.cocktailbar.backend.model.Utilisateur;
 import com.cocktailbar.backend.repository.CategorieRepository;
+import com.cocktailbar.backend.repository.CocktailIngredientRepository;
 import com.cocktailbar.backend.repository.CocktailRepository;
+import com.cocktailbar.backend.repository.CocktailTaillePrixRepository;
 import com.cocktailbar.backend.repository.UtilisateurRepository;
 
 @RestController
@@ -35,18 +40,30 @@ public class CocktailController {
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
+    @Autowired
+    private CocktailIngredientRepository cocktailIngredientRepository;
+
+    @Autowired
+    private CocktailTaillePrixRepository cocktailTaillePrixRepository;
+
     // --- Endpoint 1: Récupérer tous les cocktails ---
     @GetMapping
     public List<Cocktail> getAllCocktails() {
         return cocktailRepository.findAll();
     }
 
-    // --- Endpoint 2: Récupérer un cocktail par son ID ---
+    // --- Endpoint 2: Récupérer un cocktail par son ID (détaillé) ---
     @GetMapping("/{id}")
-    public ResponseEntity<Cocktail> getCocktailById(@PathVariable Integer id) {
-        Optional<Cocktail> cocktail = cocktailRepository.findById(id);
-        return cocktail.map(ResponseEntity::ok)
-                       .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<CocktailDetailsDTO> getCocktailById(@PathVariable Integer id) {
+        Optional<Cocktail> cocktailOpt = cocktailRepository.findById(id);
+        if (cocktailOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Cocktail cocktail = cocktailOpt.get();
+        List<CocktailIngredient> ingredients = cocktailIngredientRepository.findByCocktail_IdCocktail(id);
+        List<CocktailTaillePrix> taillesPrix = cocktailTaillePrixRepository.findByCocktail_IdCocktail(id);
+        CocktailDetailsDTO dto = CocktailDetailsDTO.fromEntities(cocktail, ingredients, taillesPrix);
+        return ResponseEntity.ok(dto);
     }
 
     // --- Endpoint 3: Créer un nouveau cocktail ---
