@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cocktailbar.backend.AuthService;
 import com.cocktailbar.backend.DTO.LoginResponse;
 import com.cocktailbar.backend.DTO.LoginUserDto;
 import com.cocktailbar.backend.DTO.RegisterUserDto;
 import com.cocktailbar.backend.DTO.UtilisateurDTO;
 import com.cocktailbar.backend.model.Utilisateur;
+import com.cocktailbar.backend.service.AuthService;
 
 @RestController
 @RequestMapping("/auth")
@@ -51,6 +51,7 @@ public class AuthController {
         ResponseCookie cookie = ResponseCookie.from("token", response.getToken())
             .httpOnly(true)
             .secure(false)
+            .sameSite("Lax")
             .maxAge(response.getExpiresIn())
             .path("/")
             .build();
@@ -59,10 +60,18 @@ public class AuthController {
             .body(response);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public String handleDataIntegrityViolation(RuntimeException ex) {
-        return ex.getMessage();
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        ResponseCookie cookie = ResponseCookie.from("token", "")
+            .httpOnly(true)
+            .secure(false)
+            .sameSite("Lax")
+            .maxAge(0)
+            .path("/")
+            .build();
+        return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, cookie.toString())
+            .body("Déconnexion réussie");
     }
 
     @GetMapping("/me")
@@ -73,8 +82,14 @@ public class AuthController {
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("username", authentication.getName());
         userInfo.put("roles", authentication.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.toList()));
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.toList()));
         return ResponseEntity.ok(userInfo);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleDataIntegrityViolation(RuntimeException ex) {
+        return ex.getMessage();
     }
 } 
