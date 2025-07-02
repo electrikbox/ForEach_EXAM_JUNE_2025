@@ -2,11 +2,13 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { login } from '../api'
+import { useUserStore } from '../stores/userStore'
 
 const router = useRouter()
 const email = ref('')
 const password = ref('')
 const error = ref('')
+const userStore = useUserStore()
 
 const handleSubmit = async () => {
   error.value = ''
@@ -19,7 +21,10 @@ const handleSubmit = async () => {
     return
   }
   try {
-    await login(email.value, password.value)
+    const res = await login(email.value, password.value)
+    console.log(res)
+    const user = await userStore.fetchUser()
+    console.log(user)
     router.push('/cocktails')
   } catch (e) {
     if (e.response && e.response.data && e.response.data.message) {
