@@ -1,6 +1,8 @@
 package com.cocktailbar.backend.controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +41,15 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginUserDto loginUserDto) {
         LoginResponse response = authService.login(loginUserDto);
-        return ResponseEntity.ok(response);
+        ResponseCookie cookie = ResponseCookie.from("token", response.getToken())
+            .httpOnly(true)
+            .secure(false)
+            .maxAge(response.getExpiresIn())
+            .path("/")
+            .build();
+        return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, cookie.toString())
+            .body(response);
     }
 
     @ExceptionHandler(RuntimeException.class)

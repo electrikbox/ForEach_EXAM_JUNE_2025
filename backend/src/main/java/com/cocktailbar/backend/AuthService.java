@@ -36,7 +36,8 @@ public class AuthService {
         }
 
         utilisateur.setMotDePasse(passwordEncoder.encode(input.getMotDePasse()));
-        utilisateur.setRoleUtilisateur(input.getRoleUtilisateur());
+        // utilisateur.setRoleUtilisateur(input.getRoleUtilisateur());
+        utilisateur.setRoleUtilisateur("Client");
         return utilisateurRepository.save(utilisateur);
     }
 

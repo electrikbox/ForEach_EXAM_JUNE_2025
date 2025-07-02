@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlckJhcm1ha2VyQGJhci5jb20iLCJpYXQiOjE3NTEzNzQxODMsImV4cCI6MTc1MTM3Nzc4M30.cpcO3eAEyOWQFtU2WBVHDZWR-G_8-pU3Dutd1QUoyVU
+@token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlckNsaWVudEBiYXIuY29tIiwiaWF0IjoxNzUxNDQ2MjMzLCJleHAiOjE3NTE0NDk4MzN9.NVz5GdXU5txcz5IcvedLtH8Dpm3e48UqPa3seUWUomU
 
 
 
@@ -350,9 +350,9 @@ POST http://localhost:8000/auth/register
 Content-Type: application/json
 
 {
-  "emailUtilisateur": "testuserBarmaker@bar.com",
+  "emailUtilisateur": "testuserClient@bar.com",
   "motDePasse": "password123",
-  "roleUtilisateur": "Barmaker"
+  "roleUtilisateur": "Client"
 }
 
 ### AUTH - Login
@@ -360,6 +360,6 @@ POST http://localhost:8000/auth/login
 Content-Type: application/json
 
 {
-  "emailUtilisateur": "testuserBarmaker@bar.com",
+  "emailUtilisateur": "testuserClient@bar.com",
   "motDePasse": "password123"
 }
