@@ -87,14 +87,15 @@ INSERT INTO Cocktail_Taille_Prix (id_cocktail, id_taille, prix) VALUES
 
 -- Insertion de données dans la table Commande
 INSERT INTO Commande (id_commande, id_utilisateur, statut_commande) VALUES
-(1, (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'client_alice'), 'Commandée'),
-(2, (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'client_bob'), 'Commandée'),
-(3, (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'client_alice'), 'en cours de préparation');
+(1, (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'client1@bar.com'), 'Commandée'),
+(2, (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'client2@bar.com'), 'Commandée'),
+(3, (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'client1@bar.com'), 'en cours de préparation');
 
 -- Insertion de données dans la table Ligne_Commande
 INSERT INTO Ligne_Commande (id_commande, id_cocktail, id_taille, quantite, statut_cocktail_preparation) VALUES
 (1, (SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Mojito'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 2, 'Préparation des Ingrédients'),
 (1, (SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Pina Colada'), (SELECT id_taille FROM Taille WHERE nom_taille = 'S'), 1, 'Préparation des Ingrédients'),
-(2, (SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Bloody Mary'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 1, 'Préparation des Ingrédients'),
 (2, (SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Virgin Mojito'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 1, 'Préparation des Ingrédients'),
-(3, (SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Espresso Martini'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 1, 'Assemblage');
+(3, (SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Sex on the Beach'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 1, 'Assemblage');
+
+-- Vérifié : les données insérées sont cohérentes avec le schéma et les tests du endpoint cocktail.

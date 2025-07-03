@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9DbGllbnQiLCJzdWIiOiJ0ZXN0dXNlckNsaWVudEBiYXIuY29tIiwiaWF0IjoxNzUxNDc3MzAzLCJleHAiOjE3NTE0ODA5MDN9.qTffTJAjMNHgvVRGlDwcLuhAIfKs5-ZvzrOofsrReoc
+@token = eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9DbGllbnQiLCJzdWIiOiJ0ZXN0dXNlckNsaWVudEBiYXIuY29tIiwiaWF0IjoxNzUxNTMwMTcwLCJleHAiOjE3NTE1MzM3NzB9.wNKwx39P7ofYcjJ6mE7TYam_YOdDc1eJo2FAb08Cnos
 
 
 
@@ -52,7 +52,7 @@ Authorization: Bearer {{token}}
 GET http://localhost:8000/api/cocktails
 Authorization: Bearer {{token}}
 
-### Get Cocktail by ID (détaillé)
+### Get Cocktail by ID (structuré)
 GET http://localhost:8000/api/cocktails/1
 Authorization: Bearer {{token}}
 
@@ -88,93 +88,6 @@ Authorization: Bearer {{token}}
 
 
 
-######################################################################## COCKTAIL-INGREDIENTS
-
-
-
-
-
-GET http://localhost:8000/api/cocktail-ingredients
-Authorization: Bearer {{token}}
-
-### Get Cocktail-Ingredient by ID
-GET http://localhost:8000/api/cocktail-ingredients/1/2
-Authorization: Bearer {{token}}
-
-### Get Cocktail-Ingredient by Cocktail ID
-GET http://localhost:8000/api/cocktail-ingredients/cocktail/1
-Authorization: Bearer {{token}}
-
-### Create a new Cocktail-Ingredient
-POST http://localhost:8000/api/cocktail-ingredients
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "cocktail": { "idCocktail": 1 },
-  "ingredient": { "idIngredient": 2 },
-  "quantite": 5,
-  "unite": "cl"
-}
-
-### Update a Cocktail-Ingredient
-PUT http://localhost:8000/api/cocktail-ingredients/1/2
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "quantite": 6,
-  "unite": "cl"
-}
-
-### Delete a Cocktail-Ingredient
-DELETE http://localhost:8000/api/cocktail-ingredients/1/2
-Authorization: Bearer {{token}}
-
-
-
-
-
-######################################################################## COCKTAIL-TAILLE-PRIX
-
-
-
-
-
-GET http://localhost:8000/api/cocktail-taille-prix
-Authorization: Bearer {{token}}
-
-### Get Cocktail-Taille-Prix by ID
-GET http://localhost:8000/api/cocktail-taille-prix/1/2
-Authorization: Bearer {{token}}
-
-### Create a new Cocktail-Taille-Prix
-POST http://localhost:8000/api/cocktail-taille-prix
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "cocktail": { "idCocktail": 1 },
-  "taille": { "idTaille": 1 },
-  "prix": 7.5
-}
-
-### Update a Cocktail-Taille-Prix
-PUT http://localhost:8000/api/cocktail-taille-prix/1/2
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "prix": 8.0
-}
-
-### Delete a Cocktail-Taille-Prix
-DELETE http://localhost:8000/api/cocktail-taille-prix/1/2
-
-
-
-
-
 ######################################################################## COMMANDES
 
 
@@ -194,7 +107,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "utilisateur": { "idUtilisateur": 22 }
+  "utilisateur": { "idUtilisateur": 1 }
 }
 
 ### Update a Commande
@@ -233,15 +146,15 @@ Authorization: Bearer {{token}}
 
 ######################################################################## UTILISATEURS
 
-GET http://localhost:8000/utilisateurs
+GET http://localhost:8000/api/utilisateurs
 Authorization: Bearer {{token}}
 
 ### Get Utilisateur by ID
-GET http://localhost:8000/utilisateurs/1
+GET http://localhost:8000/api/utilisateurs/1
 Authorization: Bearer {{token}}
 
 ### Create a new Utilisateur
-POST http://localhost:8000/utilisateurs
+POST http://localhost:8000/api/utilisateurs
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -252,7 +165,7 @@ Authorization: Bearer {{token}}
 }
 
 ### Delete a Utilisateur
-DELETE http://localhost:8000/utilisateurs/4
+DELETE http://localhost:8000/api/utilisateurs/4
 Authorization: Bearer {{token}}
 
 
@@ -281,59 +194,18 @@ Authorization: Bearer {{token}}
   "nomIngredient": "Menthe"
 }
 
-### Update a Ingredient
-PUT http://localhost:8000/api/ingredients/17
+### Update an Ingredient
+PUT http://localhost:8000/api/ingredients/5
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "nomIngredient": "Citron"
+  "nomIngredient": "Menthe fraîche"
 }
 
-### Delete a Ingredient
-DELETE http://localhost:8000/api/ingredients/17
-
-
-
-
-
-######################################################################## LIGNE-COMMANDES
-
-
-
-
-
-GET http://localhost:8000/api/ligne-commandes
+### Delete an Ingredient
+DELETE http://localhost:8000/api/ingredients/5
 Authorization: Bearer {{token}}
-
-### Get LigneCommande by ID
-GET http://localhost:8000/api/ligne-commandes/1
-Authorization: Bearer {{token}}
-
-### Create a new LigneCommande
-POST http://localhost:8000/api/ligne-commandes
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "commande": { "idCommande": 1 },
-  "cocktail": { "idCocktail": 1 },
-  "taille": { "idTaille": 1 },
-  "quantite": 2,
-  "statutCocktailPreparation": "Commandée"
-}
-
-### Update a LigneCommande
-PUT http://localhost:8000/api/ligne-commandes/1
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "quantite": 3
-}
-
-### Delete a LigneCommande
-DELETE http://localhost:8000/api/ligne-commandes/1
 
 
 
