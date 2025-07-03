@@ -30,6 +30,10 @@ export async function getCocktailDetails(id: number) {
   return api.get(`/cocktails/${id}`, { withCredentials: true })
 }
 
+export async function getCategories() {
+  return api.get('/categories', { withCredentials: true })
+}
+
 export async function logout() {
   return auth.post('/logout', {}, { withCredentials: true });
 }
