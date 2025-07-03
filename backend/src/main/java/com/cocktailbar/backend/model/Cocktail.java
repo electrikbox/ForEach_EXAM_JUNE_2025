@@ -29,17 +29,20 @@ public class Cocktail {
     @Column(name = "description_cocktail")
     private String descriptionCocktail;
 
-    @ManyToOne
+    @Column(name = "imgurl")
+    private String imgUrl;
+
+    @ManyToOne(fetch = jakarta.persistence.FetchType.EAGER)
     @JoinColumn(name = "id_categorie", referencedColumnName = "id_categorie")
     private Categorie categorie; // Relation Many-to-One avec Categorie
 
-    @ManyToOne
+    @ManyToOne(fetch = jakarta.persistence.FetchType.EAGER)
     @JoinColumn(name = "id_createur_utilisateur", referencedColumnName = "id_utilisateur")
     private Utilisateur createur; // Relation Many-to-One avec Utilisateur (le barmaker)
 
-    @OneToMany(mappedBy = "cocktail")
+    @OneToMany(mappedBy = "cocktail", fetch = jakarta.persistence.FetchType.EAGER)
     private List<CocktailIngredient> ingredients;
 
-    @OneToMany(mappedBy = "cocktail")
+    @OneToMany(mappedBy = "cocktail", fetch = jakarta.persistence.FetchType.EAGER)
     private List<CocktailTaillePrix> taillesPrix;
 }

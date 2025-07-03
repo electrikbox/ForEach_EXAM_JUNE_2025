@@ -20,13 +20,22 @@ public class CocktailDetailsDTO {
         private Integer idCocktail;
         private String nomCocktail;
         private String descriptionCocktail;
+        private String imgUrl;
         private CategorieDTO categorie;
+        private List<TaillePrixDTO> taillesPrix;
+
         public CocktailDTO(Cocktail c) {
             this.idCocktail = c.getIdCocktail();
             this.nomCocktail = c.getNomCocktail();
             this.descriptionCocktail = c.getDescriptionCocktail();
+            this.imgUrl = c.getImgUrl();
             if (c.getCategorie() != null) {
                 this.categorie = new CategorieDTO(c.getCategorie());
+            }
+            if (c.getTaillesPrix() != null) {
+                this.taillesPrix = c.getTaillesPrix().stream()
+                    .map(TaillePrixDTO::new)
+                    .toList();
             }
         }
     }
@@ -63,7 +72,7 @@ public class CocktailDetailsDTO {
         public TaillePrixDTO(CocktailTaillePrix ctp) {
             this.idTaille = ctp.getTaille().getIdTaille();
             this.nomTaille = ctp.getTaille().getNomTaille();
-            this.prix = ctp.getPrix().doubleValue();
+            this.prix = ctp.getPrix() != null ? ctp.getPrix().doubleValue() : 0.0;
         }
     }
 
@@ -72,14 +81,22 @@ public class CocktailDetailsDTO {
         private Integer idCocktail;
         private String nomCocktail;
         private String descriptionCocktail;
+        private String imgUrl;
         private CategorieDTO categorie;
+        private List<TaillePrixDTO> taillesPrix;
         
         public CocktailListDTO(Cocktail c) {
             this.idCocktail = c.getIdCocktail();
             this.nomCocktail = c.getNomCocktail();
             this.descriptionCocktail = c.getDescriptionCocktail();
+            this.imgUrl = c.getImgUrl();
             if (c.getCategorie() != null) {
                 this.categorie = new CategorieDTO(c.getCategorie());
+            }
+            if (c.getTaillesPrix() != null) {
+                this.taillesPrix = c.getTaillesPrix().stream()
+                    .map(TaillePrixDTO::new)
+                    .toList();
             }
         }
     }

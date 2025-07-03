@@ -80,17 +80,21 @@ onMounted(async () => {
           class="cocktail-card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer transform transition-all duration-200 hover:scale-[1.01] hover:shadow-lg"
           @click="openModal(cocktail)"
         >
-          <div class="flex flex-row md:flex-col items-center md:items-start p-4">
+          <div class="flex flex-col">
             <img
-              :src="cocktail.imageUrl || 'https://via.placeholder.com/150?text=Cocktail'"
+              :src="cocktail.imgUrl ? `${cocktail.imgUrl}&w=500&fit=crop` : 'https://via.placeholder.com/150?text=Cocktail'"
               :alt="cocktail.nomCocktail"
-              class="w-24 h-24 sm:w-32 sm:h-32 md:w-full md:h-48 object-cover rounded-lg md:rounded-b-none md:rounded-t-lg mr-4 md:mr-0 md:mb-4 flex-shrink-0"
+              class="w-full h-32 md:h-40 object-cover"
             />
             
-            <div class="flex-grow md:p-0">
+            <div class="p-4">
               <h2 class="text-xl font-bold text-gray-900 mb-1">{{ cocktail.nomCocktail }}</h2>
-              <p class="text-gray-600 text-sm mb-2 line-clamp-2">{{ cocktail.descriptionCocktail }}</p>
-              <p class="text-gray-500 text-xs italic mb-3">{{ cocktail.categorie?.nomCategorie }}</p>
+              <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ cocktail.descriptionCocktail }}</p>
+              <div class="inline-block bg-gray-100 px-3 py-1 rounded-full">
+                <p v-if="cocktail.taillesPrix && cocktail.taillesPrix.length > 0" class="text-gray-900 font-semibold">
+                  À partir de {{ Math.min(...cocktail.taillesPrix.map(tp => Number(tp.prix))) }}€
+                </p>
+              </div>
             </div>
           </div>
         </div>

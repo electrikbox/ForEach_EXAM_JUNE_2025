@@ -1,0 +1,10 @@
+### Vérifier les données des cocktails
+GET http://localhost:8000/api/cocktails
+
+### Vérifier les données dans la base de données
+# Exécuter dans psql :
+# SELECT id_cocktail, nom_cocktail, imgurl FROM Cocktail;
+# SELECT c.id_cocktail, c.nom_cocktail, ctp.prix, t.nom_taille 
+# FROM Cocktail c 
+# JOIN Cocktail_Taille_Prix ctp ON c.id_cocktail = ctp.id_cocktail 
+# JOIN Taille t ON ctp.id_taille = t.id_taille; 

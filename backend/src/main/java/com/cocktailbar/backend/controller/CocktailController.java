@@ -41,7 +41,15 @@ public class CocktailController {
 
     @GetMapping
     public List<CocktailDetailsDTO.CocktailListDTO> getAllCocktails() {
-        return cocktailRepository.findAll().stream()
+        List<Cocktail> cocktails = cocktailRepository.findAll();
+        // Force l'initialisation des relations
+        cocktails.forEach(cocktail -> {
+            cocktail.getTaillesPrix().size(); // Force l'initialisation
+            if (cocktail.getCategorie() != null) {
+                cocktail.getCategorie().getNomCategorie(); // Force l'initialisation
+            }
+        });
+        return cocktails.stream()
             .map(CocktailDetailsDTO.CocktailListDTO::new)
             .collect(Collectors.toList());
     }

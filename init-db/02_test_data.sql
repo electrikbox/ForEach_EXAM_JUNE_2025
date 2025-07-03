@@ -37,18 +37,20 @@ INSERT INTO Taille (nom_taille) VALUES
 ('M'),
 ('L');
 
--- Insertion de données dans la table Utilisateur (uniquement le barmaker)
+-- Insertion de données dans la table Utilisateur
 INSERT INTO Utilisateur (email_utilisateur, mot_de_passe, role_utilisateur) VALUES
-('barmaker@bar.com', '$2a$10$9hWkl3KlgI5J8Xy7KwCOXO5X1AYZHFh8OKY3Csl9kGNHzHwKEHhty', 'Barmaker');
+('barmaker@bar.com', '$2a$10$9hWkl3KlgI5J8Xy7KwCOXO5X1AYZHFh8OKY3Csl9kGNHzHwKEHhty', 'Barmaker'),
+('client1@bar.com', '$2a$10$9hWkl3KlgI5J8Xy7KwCOXO5X1AYZHFh8OKY3Csl9kGNHzHwKEHhty', 'Client'),
+('client2@bar.com', '$2a$10$9hWkl3KlgI5J8Xy7KwCOXO5X1AYZHFh8OKY3Csl9kGNHzHwKEHhty', 'Client');
 
 -- Insertion de données dans la table Cocktail
 INSERT INTO Cocktail (nom_cocktail, description_cocktail, imgUrl, id_categorie, id_createur_utilisateur) VALUES
-('Mojito', 'Un cocktail rafraîchissant à base de rhum et de menthe.', 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
-('Pina Colada', 'Un cocktail tropical crémeux à base de rhum, ananas et coco.', 'https://images.unsplash.com/photo-1582633987110-6f4ca088fb15?w=500', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Tropical'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
-('Sex on the Beach', 'Un cocktail fruité et coloré.', 'https://images.unsplash.com/photo-1626169278883-28152e7015ff?w=500', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
-('Virgin Mojito', 'La version sans alcool du célèbre Mojito.', 'https://images.unsplash.com/photo-1546171753-97d7676e4602?w=500', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Sans Alcool'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
-('Gin Tonic Concombre', 'Un gin tonic rafraîchissant avec une touche de concombre.', 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=500', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
-('Margarita', 'Le cocktail mexicain par excellence, parfait équilibre entre la tequila et les agrumes.', 'https://images.unsplash.com/photo-1556855810-ac404aa91e85?w=500', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com'));
+('Mojito', 'Un cocktail rafraîchissant à base de rhum et de menthe.', 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500&fit=crop', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
+('Pina Colada', 'Un cocktail tropical crémeux à base de rhum, ananas et coco.', 'https://images.unsplash.com/photo-1570598912132-0ba1dc952b7d?w=500&fit=crop', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Tropical'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
+('Sex on the Beach', 'Un cocktail fruité et coloré.', 'https://images.unsplash.com/photo-1541546006121-5c3bc5e8c7b9?w=500&fit=crop', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
+('Virgin Mojito', 'La version sans alcool du célèbre Mojito.', 'https://images.unsplash.com/photo-1546171753-97d7676e4602?w=500&fit=crop', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Sans Alcool'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
+('Gin Tonic Concombre', 'Un gin tonic rafraîchissant avec une touche de concombre.', 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=500&fit=crop', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
+('Margarita', 'Le cocktail mexicain par excellence, parfait équilibre entre la tequila et les agrumes.', 'https://images.unsplash.com/photo-1556855810-ac404aa91e85?w=500&fit=crop', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com'));
 
 -- Insertion de données dans la table Cocktail_Ingredient
 INSERT INTO Cocktail_Ingredient (id_cocktail, id_ingredient, quantite, unite) VALUES
@@ -98,8 +100,7 @@ INSERT INTO Cocktail_Taille_Prix (id_cocktail, id_taille, prix) VALUES
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Virgin Mojito'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 7.50),
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Gin Tonic Concombre'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 9.00),
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Gin Tonic Concombre'), (SELECT id_taille FROM Taille WHERE nom_taille = 'L'), 12.00),
-((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Margarita'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 9.50),
-((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Virgin Mojito'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 7.50);
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Margarita'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 9.50);
 
 -- Insertion de données dans la table Commande
 INSERT INTO Commande (id_commande, id_utilisateur, statut_commande) VALUES
