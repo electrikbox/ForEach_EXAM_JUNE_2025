@@ -50,11 +50,10 @@ public class SecurityConfig {
             })
             .authorizeHttpRequests(auth -> {
                 auth
-                    // .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/actuator/health/**").permitAll()
+                    .requestMatchers("/auth/login", "/auth/register", "/actuator/health/**").permitAll()
                     .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/**").permitAll()
-                    .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/commandes").hasAuthority("ROLE_Client")
+                    .requestMatchers("/auth/me").authenticated()
+                    .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/commandes").hasRole("Client")
                     .anyRequest().authenticated();
                 logger.debug("Configuration des autorisations HTTP appliquée");
             })

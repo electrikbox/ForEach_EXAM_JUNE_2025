@@ -21,7 +21,9 @@ const { user } = storeToRefs(userStore)
 const { nombreArticles } = storeToRefs(panierStore)
 
 onMounted(async () => {
-  if (!user.value) await userStore.fetchUser()
+  if (!user.value && route.path !== '/login' && route.path !== '/register') {
+    await userStore.fetchUser()
+  }
 })
 
 const isAdmin = () => {

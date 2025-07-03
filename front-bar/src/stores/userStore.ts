@@ -17,13 +17,11 @@ export const useUserStore = defineStore('user', {
       } catch (e: any) {
         console.error('Erreur fetchUser', e)
         this.user = null
-        if (
-          e.response &&
-          e.response.status === 401 &&
-          window.location.pathname !== '/login' &&
-          window.location.pathname !== '/register'
-        ) {
-          window.location.href = '/login'
+        if (e.response?.status === 401) {
+          const currentPath = window.location.pathname
+          if (currentPath !== '/login' && currentPath !== '/register') {
+            window.location.href = '/login'
+          }
         }
       }
     },

@@ -107,7 +107,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Header v-if="route.path !== '/login'" />
+  <Header v-if="route.path !== '/login' && route.path !== '/register'" />
   <main class="pb-20">
     <router-view v-slot="{ Component }">
       <transition :name="transitionName" mode="out-in">

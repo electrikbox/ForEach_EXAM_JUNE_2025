@@ -17,6 +17,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - cocktail-network
 
   backend:
     build:
@@ -34,6 +36,8 @@ services:
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: password
     entrypoint: ["/bin/sh", "-c", "sleep 15 && java -jar /app/app.jar"] # Attendre 15 secondes
+    networks:
+      - cocktail-network
 
   backend-dev:
     build:
@@ -48,6 +52,8 @@ services:
         condition: service_healthy
     volumes:
       - ./backend:/app
+    networks:
+      - cocktail-network
 
   frontend:
     build:
@@ -60,7 +66,9 @@ services:
     depends_on:
       - backend
     environment:
-      - VITE_API_URL=http://localhost:8080
+      - VITE_API_URL=http://backend:8080
+    networks:
+      - cocktail-network
 
   frontend-dev:
     build:
@@ -76,7 +84,13 @@ services:
     depends_on:
       - backend-dev
     environment:
-      - VITE_API_URL=http://localhost:8080
+      - VITE_API_URL=http://backend:8080
+    networks:
+      - cocktail-network
+
+networks:
+  cocktail-network:
+    driver: bridge
 
 volumes:
   postgres_data:
