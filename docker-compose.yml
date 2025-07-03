@@ -17,6 +17,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - cocktail-network
 
   backend:
     build:
@@ -25,7 +27,7 @@ services:
     container_name: springboot_backend
     restart: always
     ports:
-      - "8081:8080"
+      - "8080:8080"
     depends_on:
       db:
         condition: service_healthy
@@ -34,6 +36,8 @@ services:
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: password
     entrypoint: ["/bin/sh", "-c", "sleep 15 && java -jar /app/app.jar"] # Attendre 15 secondes
+    networks:
+      - cocktail-network
 
   backend-dev:
     build:
@@ -42,12 +46,51 @@ services:
     container_name: springboot_backend_dev
     restart: unless-stopped
     ports:
-      - "8000:8080"
+      - "8080:8080"
     depends_on:
       db:
         condition: service_healthy
     volumes:
       - ./backend:/app
+    networks:
+      - cocktail-network
+
+  frontend:
+    build:
+      context: ./front-bar
+      dockerfile: Dockerfile
+    container_name: vue_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_URL=http://backend:8080
+    networks:
+      - cocktail-network
+
+  frontend-dev:
+    build:
+      context: ./front-bar
+      dockerfile: Dockerfile.dev
+    container_name: vue_frontend_dev
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./front-bar:/app
+      - /app/node_modules
+    depends_on:
+      - backend-dev
+    environment:
+      - VITE_API_URL=http://backend:8080
+    networks:
+      - cocktail-network
+
+networks:
+  cocktail-network:
+    driver: bridge
 
 volumes:
   postgres_data:

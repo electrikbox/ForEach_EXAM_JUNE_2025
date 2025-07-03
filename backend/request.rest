@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9DbGllbnQiLCJzdWIiOiJ0ZXN0dXNlckNsaWVudEBiYXIuY29tIiwiaWF0IjoxNzUxNTMwMTcwLCJleHAiOjE3NTE1MzM3NzB9.wNKwx39P7ofYcjJ6mE7TYam_YOdDc1eJo2FAb08Cnos
+@token = eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9DbGllbnQiLCJzdWIiOiJ0ZXN0dXNlckNsaWVudEBiYXIuY29tIiwiaWF0IjoxNzUxNTcyMjQ0LCJleHAiOjE3NTE1NzU4NDR9.0JFqkD0X9liSah1QPCuNpyrje4xA-ozVCvNfLGjm_I0
 
 
 
@@ -10,15 +10,15 @@
 
 
 
-GET http://localhost:8000/api/categories
+GET http://localhost:8080/api/categories
 Authorization: Bearer {{token}}
 
 ### Get Category by ID
-GET http://localhost:8000/api/categories/1
+GET http://localhost:8080/api/categories/1
 Authorization: Bearer {{token}}
 
 ### Create a new Category
-POST http://localhost:8000/api/categories
+POST http://localhost:8080/api/categories
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -27,7 +27,7 @@ Authorization: Bearer {{token}}
 }
 
 ### Update a Category
-PUT http://localhost:8000/api/categories/4
+PUT http://localhost:8080/api/categories/4
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -36,7 +36,7 @@ Authorization: Bearer {{token}}
 }
 
 ### Delete a Category
-DELETE http://localhost:8000/api/categories/5
+DELETE http://localhost:8080/api/categories/5
 Authorization: Bearer {{token}}
 
 
@@ -49,15 +49,15 @@ Authorization: Bearer {{token}}
 
 
 
-GET http://localhost:8000/api/cocktails
+GET http://localhost:8080/api/cocktails
 Authorization: Bearer {{token}}
 
 ### Get Cocktail by ID (structuré)
-GET http://localhost:8000/api/cocktails/1
+GET http://localhost:8080/api/cocktails/1
 Authorization: Bearer {{token}}
 
 ### Create a new Cocktail
-POST http://localhost:8000/api/cocktails
+POST http://localhost:8080/api/cocktails
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -69,7 +69,7 @@ Authorization: Bearer {{token}}
 }
 
 ### Update a Cocktail
-PUT http://localhost:8000/api/cocktails/5
+PUT http://localhost:8080/api/cocktails/5
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -81,7 +81,7 @@ Authorization: Bearer {{token}}
 }
 
 ### Delete a Cocktail
-DELETE http://localhost:8000/api/cocktails/5
+DELETE http://localhost:8080/api/cocktails/5
 Authorization: Bearer {{token}}
 
 
@@ -94,15 +94,15 @@ Authorization: Bearer {{token}}
 
 
 
-GET http://localhost:8000/api/commandes
+GET http://localhost:8080/api/commandes
 Authorization: Bearer {{token}}
 
 ### Get Commande by ID
-GET http://localhost:8000/api/commandes/1
+GET http://localhost:8080/api/commandes/1
 Authorization: Bearer {{token}}
 
 ### Create a new Commande
-POST http://localhost:8000/api/commandes
+POST http://localhost:8080/api/commandes
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -111,7 +111,7 @@ Authorization: Bearer {{token}}
 }
 
 ### Update a Commande
-PUT http://localhost:8000/api/commandes/5
+PUT http://localhost:8080/api/commandes/5
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -120,7 +120,7 @@ Authorization: Bearer {{token}}
 }
 
 ### Delete a Commande
-DELETE http://localhost:8000/api/commandes/1
+DELETE http://localhost:8080/api/commandes/1
 Authorization: Bearer {{token}}
 
 
@@ -133,11 +133,11 @@ Authorization: Bearer {{token}}
 
 
 
-GET http://localhost:8000/api/tailles
+GET http://localhost:8080/api/tailles
 Authorization: Bearer {{token}}
 
 ### Get Taille by ID
-GET http://localhost:8000/api/tailles/1
+GET http://localhost:8080/api/tailles/1
 Authorization: Bearer {{token}}
 
 
@@ -146,15 +146,15 @@ Authorization: Bearer {{token}}
 
 ######################################################################## UTILISATEURS
 
-GET http://localhost:8000/api/utilisateurs
+GET http://localhost:8080/api/utilisateurs
 Authorization: Bearer {{token}}
 
 ### Get Utilisateur by ID
-GET http://localhost:8000/api/utilisateurs/1
+GET http://localhost:8080/api/utilisateurs/1
 Authorization: Bearer {{token}}
 
 ### Create a new Utilisateur
-POST http://localhost:8000/api/utilisateurs
+POST http://localhost:8080/api/utilisateurs
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -165,7 +165,7 @@ Authorization: Bearer {{token}}
 }
 
 ### Delete a Utilisateur
-DELETE http://localhost:8000/api/utilisateurs/4
+DELETE http://localhost:8080/api/utilisateurs/4
 Authorization: Bearer {{token}}
 
 
@@ -178,15 +178,15 @@ Authorization: Bearer {{token}}
 
 
 
-GET http://localhost:8000/api/ingredients
+GET http://localhost:8080/api/ingredients
 Authorization: Bearer {{token}}
 
 ### Get Ingredient by ID
-GET http://localhost:8000/api/ingredients/1
+GET http://localhost:8080/api/ingredients/1
 Authorization: Bearer {{token}}
 
 ### Create a new Ingredient
-POST http://localhost:8000/api/ingredients
+POST http://localhost:8080/api/ingredients
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -195,7 +195,7 @@ Authorization: Bearer {{token}}
 }
 
 ### Update an Ingredient
-PUT http://localhost:8000/api/ingredients/5
+PUT http://localhost:8080/api/ingredients/5
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -204,7 +204,7 @@ Authorization: Bearer {{token}}
 }
 
 ### Delete an Ingredient
-DELETE http://localhost:8000/api/ingredients/5
+DELETE http://localhost:8080/api/ingredients/5
 Authorization: Bearer {{token}}
 
 
@@ -218,7 +218,7 @@ Authorization: Bearer {{token}}
 
 
 ### Register
-POST http://localhost:8000/auth/register
+POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
@@ -228,7 +228,7 @@ Content-Type: application/json
 }
 
 ### AUTH - Login
-POST http://localhost:8000/auth/login
+POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
@@ -237,5 +237,5 @@ Content-Type: application/json
 }
 
 ### AUTH - Me
-GET http://localhost:8000/auth/me
+GET http://localhost:8080/auth/me
 Authorization: Bearer {{token}}

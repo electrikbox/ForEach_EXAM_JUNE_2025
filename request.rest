@@ -1,5 +1,5 @@
 ### Vérifier les données des cocktails
-GET http://localhost:8000/api/cocktails
+GET http://localhost:8080/api/cocktails
 
 ### Vérifier les données dans la base de données
 # Exécuter dans psql :
