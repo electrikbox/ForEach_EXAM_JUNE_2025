@@ -37,3 +37,7 @@ export async function getCategories() {
 export async function logout() {
   return auth.post('/logout', {}, { withCredentials: true });
 }
+
+export async function creerCommande(commandeData: any) {
+  return api.post('/commandes', commandeData, { withCredentials: true });
+}

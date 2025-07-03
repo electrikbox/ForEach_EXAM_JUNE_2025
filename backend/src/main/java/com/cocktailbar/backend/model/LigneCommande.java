@@ -1,5 +1,7 @@
 package com.cocktailbar.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +24,7 @@ public class LigneCommande {
 
     @ManyToOne
     @JoinColumn(name = "id_commande")
+    @JsonBackReference
     private Commande commande;
 
     @ManyToOne

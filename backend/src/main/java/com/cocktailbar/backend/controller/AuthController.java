@@ -23,15 +23,18 @@ import com.cocktailbar.backend.DTO.LoginUserDto;
 import com.cocktailbar.backend.DTO.RegisterUserDto;
 import com.cocktailbar.backend.DTO.UtilisateurDTO;
 import com.cocktailbar.backend.model.Utilisateur;
+import com.cocktailbar.backend.repository.UtilisateurRepository;
 import com.cocktailbar.backend.service.AuthService;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
     private final AuthService authService;
+    private final UtilisateurRepository utilisateurRepository;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, UtilisateurRepository utilisateurRepository) {
         this.authService = authService;
+        this.utilisateurRepository = utilisateurRepository;
     }
 
     @PostMapping("/register")
@@ -79,11 +82,18 @@ public class AuthController {
         if (authentication == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        // Récupérer l'utilisateur depuis la base de données
+        Utilisateur utilisateur = utilisateurRepository.findByEmailUtilisateur(authentication.getName())
+            .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
         Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("id", utilisateur.getIdUtilisateur());
         userInfo.put("username", authentication.getName());
         userInfo.put("roles", authentication.getAuthorities().stream()
-        .map(GrantedAuthority::getAuthority)
-        .collect(Collectors.toList()));
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toList()));
+        
         return ResponseEntity.ok(userInfo);
     }
 

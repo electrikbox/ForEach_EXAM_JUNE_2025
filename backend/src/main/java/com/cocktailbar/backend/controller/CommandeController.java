@@ -15,9 +15,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cocktailbar.backend.DTO.CommandeRequestDTO;
+import com.cocktailbar.backend.model.Cocktail;
 import com.cocktailbar.backend.model.Commande;
+import com.cocktailbar.backend.model.LigneCommande;
+import com.cocktailbar.backend.model.Taille;
 import com.cocktailbar.backend.model.Utilisateur;
+import com.cocktailbar.backend.repository.CocktailRepository;
 import com.cocktailbar.backend.repository.CommandeRepository;
+import com.cocktailbar.backend.repository.TailleRepository;
 import com.cocktailbar.backend.repository.UtilisateurRepository;
 
 @RestController
@@ -26,11 +32,17 @@ public class CommandeController {
 
     private final CommandeRepository commandeRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private final CocktailRepository cocktailRepository;
+    private final TailleRepository tailleRepository;
 
     public CommandeController(CommandeRepository commandeRepository,
-                              UtilisateurRepository utilisateurRepository) {
+                              UtilisateurRepository utilisateurRepository,
+                              CocktailRepository cocktailRepository,
+                              TailleRepository tailleRepository) {
         this.commandeRepository = commandeRepository;
         this.utilisateurRepository = utilisateurRepository;
+        this.cocktailRepository = cocktailRepository;
+        this.tailleRepository = tailleRepository;
     }
 
     @GetMapping
@@ -46,27 +58,36 @@ public class CommandeController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCommande(@RequestBody Commande newCommande) {
-        // Vérifie si l'utilisateur associé à la commande existe
-        if (newCommande.getUtilisateur() != null && newCommande.getUtilisateur().getIdUtilisateur() != null) {
-            Optional<Utilisateur> utilisateur = utilisateurRepository.findById(newCommande.getUtilisateur().getIdUtilisateur());
-            if (utilisateur.isEmpty()) {
-                return ResponseEntity.badRequest().body(Map.of("message", "L'utilisateur n'existe pas"));
+    public ResponseEntity<?> createCommande(@RequestBody CommandeRequestDTO commandeDTO) {
+        Optional<Utilisateur> utilisateurOpt = utilisateurRepository.findById(commandeDTO.getUtilisateurId());
+        if (utilisateurOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "L'utilisateur n'existe pas"));
+        }
+
+        Commande newCommande = new Commande();
+        newCommande.setUtilisateur(utilisateurOpt.get());
+        newCommande.setDateCommande(LocalDateTime.now());
+        newCommande.setStatutCommande("Commandée");
+
+        List<LigneCommande> lignes = new java.util.ArrayList<>();
+        for (var ligneDTO : commandeDTO.getLignes()) {
+            Optional<Cocktail> cocktailOpt = cocktailRepository.findById(ligneDTO.getCocktailId());
+            Optional<Taille> tailleOpt = tailleRepository.findById(ligneDTO.getTailleId());
+
+            if (cocktailOpt.isEmpty() || tailleOpt.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Cocktail ou taille invalide"));
             }
-            newCommande.setUtilisateur(utilisateur.get());
-        } else {
-            return ResponseEntity.badRequest().body(Map.of("message", "L'utilisateur est obligatoire pour une commande"));
+
+            LigneCommande ligne = new LigneCommande();
+            ligne.setCommande(newCommande);
+            ligne.setCocktail(cocktailOpt.get());
+            ligne.setTaille(tailleOpt.get());
+            ligne.setQuantite(ligneDTO.getQuantite());
+            ligne.setStatutCocktailPreparation(ligneDTO.getStatutCocktailPreparation());
+            lignes.add(ligne);
         }
 
-        // Définir la date de commande si elle n'est pas déjà définie dans le JSON
-        if (newCommande.getDateCommande() == null) {
-            newCommande.setDateCommande(LocalDateTime.now());
-        }
-
-        // Définir le statut initial de la commande
-        if (newCommande.getStatutCommande() == null || newCommande.getStatutCommande().isEmpty()) {
-            newCommande.setStatutCommande("Commandée");
-        }
+        newCommande.setLignes(lignes);
 
         Commande savedCommande = commandeRepository.save(newCommande);
         return ResponseEntity.ok(savedCommande);

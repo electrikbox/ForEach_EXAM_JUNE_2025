@@ -34,6 +34,7 @@ CREATE TABLE Cocktail (
     id_cocktail SERIAL PRIMARY KEY,
     nom_cocktail VARCHAR(100) NOT NULL UNIQUE,
     description_cocktail TEXT,
+    imgUrl VARCHAR(255),
     id_categorie INT,
     id_createur_utilisateur INT,
     FOREIGN KEY (id_categorie) REFERENCES Categorie(id_categorie),

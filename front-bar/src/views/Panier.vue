@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { usePanierStore } from '../stores/panierStore'
 import { useUserStore } from '../stores/userStore'
+import { creerCommande } from '../api'
 
 const router = useRouter()
 const panierStore = usePanierStore()
@@ -32,29 +33,34 @@ const validerCommande = async () => {
     return
   }
 
+  console.log('Utilisateur connecté:', userStore.user)
+  console.log('Rôles de l\'utilisateur:', userStore.user.roles)
+
   validationEnCours.value = true
+
+  const commandeData = {
+    utilisateurId: userStore.user.id,
+    lignes: panierStore.lignes.map(ligne => ({
+      cocktailId: ligne.cocktailId,
+      tailleId: ligne.tailleId,
+      quantite: ligne.quantite,
+      statutCocktailPreparation: "Préparation des Ingrédients"
+    }))
+  }
+  
+  console.log('Données de la commande:', commandeData)
   
   try {
-    // TODO: Appel API pour créer la commande
-    // const commande = {
-    //   utilisateur: { idUtilisateur: userStore.user.id },
-    //   lignes: panierStore.lignes.map(ligne => ({
-    //     cocktail: { idCocktail: ligne.cocktailId },
-    //     taille: { idTaille: ligne.tailleId },
-    //     quantite: ligne.quantite
-    //   }))
-    // }
-    
-    // Simulation d'un appel API réussi
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await creerCommande(commandeData);
     
     alert('Commande validée avec succès !')
     panierStore.viderPanier()
     router.push('/cocktails')
     
-  } catch (error) {
+  } catch (error: any) {
     alert('Erreur lors de la validation de la commande')
     console.error('Erreur validation commande:', error)
+    console.error('Détails de l\'erreur:', error.response?.data)
   } finally {
     validationEnCours.value = false
   }

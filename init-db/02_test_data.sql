@@ -23,7 +23,13 @@ INSERT INTO Ingredient (nom_ingredient) VALUES
 ('Liqueur d''Orange'),
 ('Jus d''Orange'),
 ('Glaçons'),
-('Cerise');
+('Cerise'),
+('Gin'),
+('Tonic'),
+('Concombre'),
+('Tequila'),
+('Triple Sec'),
+('Citron Jaune');
 
 -- Insertion de données dans la table Taille
 INSERT INTO Taille (nom_taille) VALUES
@@ -31,22 +37,20 @@ INSERT INTO Taille (nom_taille) VALUES
 ('M'),
 ('L');
 
--- Insertion de données dans la table Utilisateur (pour les clients et les barmakers)
+-- Insertion de données dans la table Utilisateur (uniquement le barmaker)
 INSERT INTO Utilisateur (email_utilisateur, mot_de_passe, role_utilisateur) VALUES
-('client1@bar.com', 'passclient1', 'Client'),
-('barmaker1@bar.com', 'passbarmaker1', 'Barmaker'),
-('client2@bar.com', 'passclient2', 'Client');
+('barmaker@bar.com', '$2a$10$9hWkl3KlgI5J8Xy7KwCOXO5X1AYZHFh8OKY3Csl9kGNHzHwKEHhty', 'Barmaker');
 
 -- Insertion de données dans la table Cocktail
--- Assurez-vous que les IDs de catégorie et de créateur existent !
-INSERT INTO Cocktail (nom_cocktail, description_cocktail, id_categorie, id_createur_utilisateur) VALUES
-('Mojito', 'Un cocktail rafraîchissant à base de rhum et de menthe.', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker1')),
-('Pina Colada', 'Un cocktail tropical crémeux à base de rhum, ananas et coco.', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Tropical'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker1')),
-('Sex on the Beach', 'Un cocktail fruité et coloré.', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker1')),
-('Virgin Mojito', 'La version sans alcool du célèbre Mojito.', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Sans Alcool'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker1'));
+INSERT INTO Cocktail (nom_cocktail, description_cocktail, imgUrl, id_categorie, id_createur_utilisateur) VALUES
+('Mojito', 'Un cocktail rafraîchissant à base de rhum et de menthe.', 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
+('Pina Colada', 'Un cocktail tropical crémeux à base de rhum, ananas et coco.', 'https://images.unsplash.com/photo-1582633987110-6f4ca088fb15?w=500', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Tropical'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
+('Sex on the Beach', 'Un cocktail fruité et coloré.', 'https://images.unsplash.com/photo-1626169278883-28152e7015ff?w=500', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
+('Virgin Mojito', 'La version sans alcool du célèbre Mojito.', 'https://images.unsplash.com/photo-1546171753-97d7676e4602?w=500', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Sans Alcool'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
+('Gin Tonic Concombre', 'Un gin tonic rafraîchissant avec une touche de concombre.', 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=500', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com')),
+('Margarita', 'Le cocktail mexicain par excellence, parfait équilibre entre la tequila et les agrumes.', 'https://images.unsplash.com/photo-1556855810-ac404aa91e85?w=500', (SELECT id_categorie FROM Categorie WHERE nom_categorie = 'Classique'), (SELECT id_utilisateur FROM Utilisateur WHERE email_utilisateur = 'barmaker@bar.com'));
 
 -- Insertion de données dans la table Cocktail_Ingredient
--- ID_COCKTAIL, ID_INGREDIENT, QUANTITE, UNITE
 INSERT INTO Cocktail_Ingredient (id_cocktail, id_ingredient, quantite, unite) VALUES
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Mojito'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Rhum Blanc'), 50.0, 'ml'),
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Mojito'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Jus de Citron Vert'), 25.0, 'ml'),
@@ -71,11 +75,19 @@ INSERT INTO Cocktail_Ingredient (id_cocktail, id_ingredient, quantite, unite) VA
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Virgin Mojito'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Menthe Fraîche'), 10.0, 'feuilles'),
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Virgin Mojito'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Sucre de Canne'), 20.0, 'ml'),
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Virgin Mojito'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Eau Gazeuse'), 100.0, 'ml'),
-((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Virgin Mojito'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Glaçons'), 1.0, 'dose');
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Virgin Mojito'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Glaçons'), 1.0, 'dose'),
 
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Gin Tonic Concombre'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Gin'), 50.0, 'ml'),
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Gin Tonic Concombre'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Tonic'), 100.0, 'ml'),
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Gin Tonic Concombre'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Concombre'), 3.0, 'tranches'),
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Gin Tonic Concombre'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Glaçons'), 1.0, 'dose'),
+
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Margarita'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Tequila'), 50.0, 'ml'),
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Margarita'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Triple Sec'), 25.0, 'ml'),
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Margarita'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Citron Jaune'), 25.0, 'ml'),
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Margarita'), (SELECT id_ingredient FROM Ingredient WHERE nom_ingredient = 'Glaçons'), 1.0, 'dose');
 
 -- Insertion de données dans la table Cocktail_Taille_Prix
--- ID_COCKTAIL, ID_TAILLE, PRIX
 INSERT INTO Cocktail_Taille_Prix (id_cocktail, id_taille, prix) VALUES
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Mojito'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 8.50),
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Mojito'), (SELECT id_taille FROM Taille WHERE nom_taille = 'L'), 11.00),
@@ -83,6 +95,10 @@ INSERT INTO Cocktail_Taille_Prix (id_cocktail, id_taille, prix) VALUES
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Pina Colada'), (SELECT id_taille FROM Taille WHERE nom_taille = 'L'), 12.00),
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Sex on the Beach'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 8.00),
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Virgin Mojito'), (SELECT id_taille FROM Taille WHERE nom_taille = 'S'), 6.00),
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Virgin Mojito'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 7.50),
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Gin Tonic Concombre'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 9.00),
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Gin Tonic Concombre'), (SELECT id_taille FROM Taille WHERE nom_taille = 'L'), 12.00),
+((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Margarita'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 9.50),
 ((SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Virgin Mojito'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 7.50);
 
 -- Insertion de données dans la table Commande
@@ -97,5 +113,8 @@ INSERT INTO Ligne_Commande (id_commande, id_cocktail, id_taille, quantite, statu
 (1, (SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Pina Colada'), (SELECT id_taille FROM Taille WHERE nom_taille = 'S'), 1, 'Préparation des Ingrédients'),
 (2, (SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Virgin Mojito'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 1, 'Préparation des Ingrédients'),
 (3, (SELECT id_cocktail FROM Cocktail WHERE nom_cocktail = 'Sex on the Beach'), (SELECT id_taille FROM Taille WHERE nom_taille = 'M'), 1, 'Assemblage');
+
+-- Mise à jour de la séquence pour la table Commande
+SELECT setval('commande_id_commande_seq', (SELECT MAX(id_commande) FROM Commande));
 
 -- Vérifié : les données insérées sont cohérentes avec le schéma et les tests du endpoint cocktail.

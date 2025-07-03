@@ -3,7 +3,7 @@ import { getUser } from '../api'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: null as null | { username: string, roles: string[] }
+    user: null as null | { id: number, username: string, roles: string[] }
   }),
   actions: {
     async fetchUser() {

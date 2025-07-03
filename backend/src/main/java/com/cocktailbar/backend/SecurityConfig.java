@@ -1,5 +1,7 @@
 package com.cocktailbar.backend;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,10 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
-import com.cocktailbar.backend.model.Utilisateur;
 import com.cocktailbar.backend.repository.UtilisateurRepository;
 import com.cocktailbar.backend.service.JwtService;
 
@@ -28,6 +29,9 @@ import com.cocktailbar.backend.service.JwtService;
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
+
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
         return new JwtAuthenticationFilter(jwtService, userDetailsService);
@@ -36,14 +40,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/cocktails/**").authenticated()
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .cors(cors -> {
+                logger.debug("Configuration CORS appliquée");
+                cors.configurationSource(corsConfigurationSource());
+            })
+            .csrf(csrf -> {
+                logger.debug("CSRF désactivé");
+                csrf.disable();
+            })
+            .authorizeHttpRequests(auth -> {
+                auth
+                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/**").permitAll()
+                    .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/commandes").hasAuthority("ROLE_Client")
+                    .anyRequest().authenticated();
+                logger.debug("Configuration des autorisations HTTP appliquée");
+            })
+            .sessionManagement(session -> {
+                logger.debug("Gestion de session configurée comme STATELESS");
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            })
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
@@ -54,17 +72,20 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(UtilisateurRepository utilisateurRepository) {
-        return username -> {
-            Utilisateur utilisateur = utilisateurRepository.findAll().stream()
-                .filter(u -> u.getEmailUtilisateur().equals(username))
-                .findFirst()
-                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé : " + username));
-            return org.springframework.security.core.userdetails.User
-                .withUsername(utilisateur.getEmailUtilisateur())
-                .password(utilisateur.getMotDePasse())
-                .roles(utilisateur.getRoleUtilisateur())
-                .build();
-        };
+        return username -> utilisateurRepository.findByEmailUtilisateur(username)
+                .map(utilisateur -> {
+                    var user = org.springframework.security.core.userdetails.User
+                        .withUsername(utilisateur.getEmailUtilisateur())
+                        .password(utilisateur.getMotDePasse())
+                        .roles(utilisateur.getRoleUtilisateur())
+                        .build();
+                    logger.debug("Utilisateur chargé : {} avec rôles : {}", username, user.getAuthorities());
+                    return user;
+                })
+                .orElseThrow(() -> {
+                    logger.error("Utilisateur non trouvé : {}", username);
+                    return new UsernameNotFoundException("Utilisateur non trouvé : " + username);
+                });
     }
 
     @Bean
@@ -80,15 +101,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsFilter corsFilter() {
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(java.util.List.of("http://localhost:5173", "http://127.0.0.1:5173"));
+        configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(java.util.List.of("*"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:5173");
-        config.addAllowedOrigin("http://127.0.0.1:5173");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        source.registerCorsConfiguration("/**", configuration);
+        logger.debug("Configuration CORS créée avec origines autorisées : {}", configuration.getAllowedOrigins());
+        return source;
     }
 } 
