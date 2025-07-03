@@ -4,8 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cocktailbar.backend.DTO.CommandeRequestDTO;
+import com.cocktailbar.backend.DTO.CommandeResponseDTO;
 import com.cocktailbar.backend.model.Cocktail;
 import com.cocktailbar.backend.model.Commande;
 import com.cocktailbar.backend.model.LigneCommande;
@@ -46,14 +50,28 @@ public class CommandeController {
     }
 
     @GetMapping
-    public List<Commande> getAllCommandes() {
-        return commandeRepository.findAll();
+    public List<CommandeResponseDTO> getAllCommandes() {
+        // Récupérer l'utilisateur authentifié
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+        
+        // Récupérer l'utilisateur depuis la base de données
+        Optional<Utilisateur> utilisateur = utilisateurRepository.findByEmailUtilisateur(userEmail);
+        
+        if (utilisateur.isEmpty()) {
+            return List.of(); // Retourner une liste vide si l'utilisateur n'est pas trouvé
+        }
+        
+        // Récupérer uniquement les commandes de l'utilisateur connecté
+        return commandeRepository.findByUtilisateur(utilisateur.get()).stream()
+            .map(CommandeResponseDTO::fromCommande)
+            .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Commande> getCommandeById(@PathVariable Integer id) {
+    public ResponseEntity<CommandeResponseDTO> getCommandeById(@PathVariable Integer id) {
         Optional<Commande> commande = commandeRepository.findById(id);
-        return commande.map(ResponseEntity::ok)
+        return commande.map(c -> ResponseEntity.ok(CommandeResponseDTO.fromCommande(c)))
                        .orElse(ResponseEntity.notFound().build());
     }
 
@@ -83,18 +101,17 @@ public class CommandeController {
             ligne.setCocktail(cocktailOpt.get());
             ligne.setTaille(tailleOpt.get());
             ligne.setQuantite(ligneDTO.getQuantite());
-            ligne.setStatutCocktailPreparation(ligneDTO.getStatutCocktailPreparation());
             lignes.add(ligne);
         }
 
         newCommande.setLignes(lignes);
 
         Commande savedCommande = commandeRepository.save(newCommande);
-        return ResponseEntity.ok(savedCommande);
+        return ResponseEntity.ok(CommandeResponseDTO.fromCommande(savedCommande));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Commande> updateCommande(@PathVariable Integer id, @RequestBody Commande updatedCommande) {
+    public ResponseEntity<CommandeResponseDTO> updateCommande(@PathVariable Integer id, @RequestBody Commande updatedCommande) {
         Optional<Commande> existingCommandeOptional = commandeRepository.findById(id);
 
         if (existingCommandeOptional.isEmpty()) {
@@ -103,23 +120,21 @@ public class CommandeController {
 
         Commande existingCommande = existingCommandeOptional.get();
 
-        // Mettez à jour les champs
         existingCommande.setDateCommande(updatedCommande.getDateCommande() != null ? updatedCommande.getDateCommande() : existingCommande.getDateCommande());
         existingCommande.setStatutCommande(updatedCommande.getStatutCommande() != null ? updatedCommande.getStatutCommande() : existingCommande.getStatutCommande());
 
-        // Gère la mise à jour de l'utilisateur (si modifié)
         if (updatedCommande.getUtilisateur() != null && updatedCommande.getUtilisateur().getIdUtilisateur() != null) {
             Optional<Utilisateur> utilisateur = utilisateurRepository.findById(updatedCommande.getUtilisateur().getIdUtilisateur());
             if (utilisateur.isEmpty()) {
-                return ResponseEntity.badRequest().body(null); // Erreur si le nouvel utilisateur n'existe pas
+                return ResponseEntity.badRequest().build();
             }
             existingCommande.setUtilisateur(utilisateur.get());
         } else if (updatedCommande.getUtilisateur() == null) {
-            return ResponseEntity.badRequest().body(null); // idUtilisateur ne peut pas être null
+            return ResponseEntity.badRequest().build();
         }
 
         Commande savedCommande = commandeRepository.save(existingCommande);
-        return ResponseEntity.ok(savedCommande);
+        return ResponseEntity.ok(CommandeResponseDTO.fromCommande(savedCommande));
     }
 
     @DeleteMapping("/{id}")

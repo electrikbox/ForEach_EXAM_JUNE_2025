@@ -7,5 +7,4 @@ public class LigneCommandeRequestDTO {
     private Integer cocktailId;
     private Integer tailleId;
     private Integer quantite;
-    private String statutCocktailPreparation;
 } 

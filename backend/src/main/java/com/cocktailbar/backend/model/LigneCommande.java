@@ -36,7 +36,4 @@ public class LigneCommande {
     private Taille taille;
 
     private Integer quantite;
-
-    @Column(name = "statut_cocktail_preparation", nullable = false)
-    private String statutCocktailPreparation;
 }

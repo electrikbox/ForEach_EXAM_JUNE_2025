@@ -6,7 +6,7 @@ import { usePanierStore } from '../stores/panierStore'
 import { storeToRefs } from 'pinia'
 
 const cocktailLink = "/cocktails"
-const checkLink = "/check"
+const mesCommandesLink = "/mes-commandes"
 const panierLink = "/panier"
 const logoutLink = "/logout"
 const adminLink = "/admin"
@@ -43,11 +43,11 @@ const isAdmin = () => {
         Cocktails
       </RouterLink>
       <RouterLink
-        :to="checkLink"
-        :class="['dock-label text-sm', { 'dock-active': isActive(checkLink) } ]"
+        :to="mesCommandesLink"
+        :class="['dock-label text-sm', { 'dock-active': isActive(mesCommandesLink) } ]"
       >
         <svg class="size-[1.2em] mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" stroke-linejoin="miter" stroke-linecap="butt"><polyline points="3 14 9 14 9 17 15 17 15 14 21 14" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></polyline><rect x="3" y="3" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></rect></g></svg>
-        Check
+        Commandes
       </RouterLink>
       <RouterLink
         :to="panierLink"

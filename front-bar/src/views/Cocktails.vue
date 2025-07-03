@@ -46,9 +46,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
-    <div :class="['w-full max-w-5xl mx-auto', showModal ? 'blur-bg pointer-events-none select-none' : '']">
-      <h1 class="text-4xl font-bold text-gray-900 text-center mb-8">Cocktails</h1>
+  <div class="py-8 px-4 sm:px-6 lg:px-8">
+    <div :class="['w-full max-w-6xl mx-auto', showModal ? 'blur-bg pointer-events-none select-none' : '']">
+      <div class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
+        <h1 class="text-4xl font-bold text-gray-900">Cocktails</h1>
+      </div>
 
       <div class="flex flex-nowrap overflow-x-auto gap-3 mb-10 pb-2 custom-scrollbar
                   md:flex-wrap md:justify-center md:overflow-x-visible">
@@ -80,20 +82,22 @@ onMounted(async () => {
           class="cocktail-card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer transform transition-all duration-200 hover:scale-[1.01] hover:shadow-lg"
           @click="openModal(cocktail)"
         >
-          <div class="flex flex-col">
+          <div class="flex flex-col h-full">
             <img
               :src="cocktail.imgUrl ? `${cocktail.imgUrl}&w=500&fit=crop` : 'https://via.placeholder.com/150?text=Cocktail'"
               :alt="cocktail.nomCocktail"
               class="w-full h-32 md:h-40 object-cover"
             />
             
-            <div class="p-4">
+            <div class="p-4 flex flex-col flex-grow">
               <h2 class="text-xl font-bold text-gray-900 mb-1">{{ cocktail.nomCocktail }}</h2>
               <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ cocktail.descriptionCocktail }}</p>
-              <div class="inline-block bg-gray-100 px-3 py-1 rounded-full">
-                <p v-if="cocktail.taillesPrix && cocktail.taillesPrix.length > 0" class="text-gray-900 font-semibold">
-                  À partir de {{ Math.min(...cocktail.taillesPrix.map(tp => Number(tp.prix))) }}€
-                </p>
+              <div class="mt-auto">
+                <div class="inline-block bg-gray-100 px-3 py-1 rounded-full">
+                  <p v-if="cocktail.taillesPrix && cocktail.taillesPrix.length > 0" class="text-gray-900 font-semibold">
+                    À partir de {{ Math.min(...cocktail.taillesPrix.map(tp => Number(tp.prix))) }}€
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -161,16 +165,16 @@ onMounted(async () => {
 
 /* Styles pour masquer la barre de défilement */
 .custom-scrollbar::-webkit-scrollbar {
-  height: 6px; /* Ajustez la hauteur selon vos préférences */
+  height: 6px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent; /* Fond transparent pour la piste */
+  background: transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(156, 163, 175, 0.5); /* Couleur du pouce (gris semi-transparent) */
-  border-radius: 3px; /* Coins arrondis pour le pouce */
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
 }
 
 /* Pour Firefox */

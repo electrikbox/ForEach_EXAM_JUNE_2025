@@ -41,3 +41,7 @@ export async function logout() {
 export async function creerCommande(commandeData: any) {
   return api.post('/commandes', commandeData, { withCredentials: true });
 }
+
+export async function getCommandesUtilisateur() {
+  return api.get('/commandes', { withCredentials: true });
+}

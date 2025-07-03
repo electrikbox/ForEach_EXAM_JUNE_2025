@@ -43,8 +43,7 @@ const validerCommande = async () => {
     lignes: panierStore.lignes.map(ligne => ({
       cocktailId: ligne.cocktailId,
       tailleId: ligne.tailleId,
-      quantite: ligne.quantite,
-      statutCocktailPreparation: "Préparation des Ingrédients"
+      quantite: ligne.quantite
     }))
   }
   
@@ -68,10 +67,10 @@ const validerCommande = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+  <div class="py-8 px-4 sm:px-6 lg:px-8">
     <div class="max-w-6xl mx-auto"> 
       <div class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
-        <h1 class="text-4xl font-bold text-gray-900 text-center flex-grow">Panier</h1>
+        <h1 class="text-4xl font-bold text-gray-900">Panier</h1>
         <button 
           v-if="panierStore.lignes.length > 0"
           @click="viderPanier" 
@@ -161,12 +160,22 @@ const validerCommande = async () => {
             </div>
           </div>
           
+          <div v-if="userStore.user && userStore.user.roles.includes('ROLE_Barmaker')" 
+               class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4 text-yellow-800">
+            <p class="text-sm">
+              En tant que Barmaker, vous ne pouvez pas passer de commande. 
+              Cette interface est réservée aux clients.
+            </p>
+          </div>
+
           <button 
+            v-else
             @click="validerCommande"
-            :disabled="validationEnCours || panierStore.lignes.length === 0"
+            :disabled="!!(validationEnCours || panierStore.lignes.length === 0 || (userStore.user && userStore.user.roles.includes('ROLE_Barmaker')))"
             class="w-full p-4 bg-yellow-400 text-gray-900 font-bold text-lg rounded-xl shadow-md hover:bg-yellow-500 transition-colors duration-200 disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed"
           >
             <span v-if="validationEnCours">Validation en cours...</span>
+            <span v-else-if="!userStore.user">Connectez-vous pour commander</span>
             <span v-else>Valider ma commande</span>
           </button>
         </div>
