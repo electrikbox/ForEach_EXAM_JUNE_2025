@@ -34,6 +34,7 @@ CREATE TABLE Cocktail (
     id_cocktail SERIAL PRIMARY KEY,
     nom_cocktail VARCHAR(100) NOT NULL UNIQUE,
     description_cocktail TEXT,
+    imgUrl VARCHAR(255),
     id_categorie INT,
     id_createur_utilisateur INT,
     FOREIGN KEY (id_categorie) REFERENCES Categorie(id_categorie),
@@ -77,7 +78,6 @@ CREATE TABLE Ligne_Commande (
     id_cocktail INT,
     id_taille INT,
     quantite INT NOT NULL,
-    statut_cocktail_preparation VARCHAR(50) CHECK (statut_cocktail_preparation IN ('Préparation des Ingrédients', 'Assemblage', 'Dressage', 'Terminée')) DEFAULT 'Préparation des Ingrédients' NOT NULL,
     FOREIGN KEY (id_commande) REFERENCES Commande(id_commande),
     FOREIGN KEY (id_cocktail) REFERENCES Cocktail(id_cocktail),
     FOREIGN KEY (id_taille) REFERENCES Taille(id_taille)

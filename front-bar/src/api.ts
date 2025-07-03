@@ -30,6 +30,26 @@ export async function getCocktailDetails(id: number) {
   return api.get(`/cocktails/${id}`, { withCredentials: true })
 }
 
+export async function getCategories() {
+  return api.get('/categories', { withCredentials: true })
+}
+
 export async function logout() {
   return auth.post('/logout', {}, { withCredentials: true });
+}
+
+export async function creerCommande(commandeData: any) {
+  return api.post('/commandes', commandeData, { withCredentials: true });
+}
+
+export async function getCommandesUtilisateur() {
+  return api.get('/commandes', { withCredentials: true });
+}
+
+export async function getAllCommandes() {
+  return api.get('/commandes/all', { withCredentials: true });
+}
+
+export async function updateCommandeStatus(commandeId: number, statutCommande: string) {
+  return api.put(`/commandes/${commandeId}/statut`, { statutCommande }, { withCredentials: true });
 }

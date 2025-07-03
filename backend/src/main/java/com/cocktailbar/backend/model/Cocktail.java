@@ -1,5 +1,7 @@
 package com.cocktailbar.backend.model;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -26,11 +29,20 @@ public class Cocktail {
     @Column(name = "description_cocktail")
     private String descriptionCocktail;
 
-    @ManyToOne
+    @Column(name = "imgurl")
+    private String imgUrl;
+
+    @ManyToOne(fetch = jakarta.persistence.FetchType.EAGER)
     @JoinColumn(name = "id_categorie", referencedColumnName = "id_categorie")
     private Categorie categorie; // Relation Many-to-One avec Categorie
 
-    @ManyToOne
+    @ManyToOne(fetch = jakarta.persistence.FetchType.EAGER)
     @JoinColumn(name = "id_createur_utilisateur", referencedColumnName = "id_utilisateur")
     private Utilisateur createur; // Relation Many-to-One avec Utilisateur (le barmaker)
+
+    @OneToMany(mappedBy = "cocktail", fetch = jakarta.persistence.FetchType.EAGER)
+    private List<CocktailIngredient> ingredients;
+
+    @OneToMany(mappedBy = "cocktail", fetch = jakarta.persistence.FetchType.EAGER)
+    private List<CocktailTaillePrix> taillesPrix;
 }

@@ -2,6 +2,7 @@ package com.cocktailbar.backend.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,13 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cocktailbar.backend.DTO.CocktailDetailsDTO;
 import com.cocktailbar.backend.model.Categorie;
 import com.cocktailbar.backend.model.Cocktail;
-import com.cocktailbar.backend.model.CocktailIngredient;
-import com.cocktailbar.backend.model.CocktailTaillePrix;
 import com.cocktailbar.backend.model.Utilisateur;
 import com.cocktailbar.backend.repository.CategorieRepository;
-import com.cocktailbar.backend.repository.CocktailIngredientRepository;
 import com.cocktailbar.backend.repository.CocktailRepository;
-import com.cocktailbar.backend.repository.CocktailTaillePrixRepository;
 import com.cocktailbar.backend.repository.UtilisateurRepository;
 
 @RestController
@@ -33,24 +30,28 @@ public class CocktailController {
     private final CocktailRepository cocktailRepository;
     private final CategorieRepository categorieRepository;
     private final UtilisateurRepository utilisateurRepository;
-    private final CocktailIngredientRepository cocktailIngredientRepository;
-    private final CocktailTaillePrixRepository cocktailTaillePrixRepository;
 
     public CocktailController(CocktailRepository cocktailRepository,
                              CategorieRepository categorieRepository,
-                             UtilisateurRepository utilisateurRepository,
-                             CocktailIngredientRepository cocktailIngredientRepository,
-                             CocktailTaillePrixRepository cocktailTaillePrixRepository) {
+                             UtilisateurRepository utilisateurRepository) {
         this.cocktailRepository = cocktailRepository;
         this.categorieRepository = categorieRepository;
         this.utilisateurRepository = utilisateurRepository;
-        this.cocktailIngredientRepository = cocktailIngredientRepository;
-        this.cocktailTaillePrixRepository = cocktailTaillePrixRepository;
     }
 
     @GetMapping
-    public List<Cocktail> getAllCocktails() {
-        return cocktailRepository.findAll();
+    public List<CocktailDetailsDTO.CocktailListDTO> getAllCocktails() {
+        List<Cocktail> cocktails = cocktailRepository.findAll();
+        // Force l'initialisation des relations
+        cocktails.forEach(cocktail -> {
+            cocktail.getTaillesPrix().size(); // Force l'initialisation
+            if (cocktail.getCategorie() != null) {
+                cocktail.getCategorie().getNomCategorie(); // Force l'initialisation
+            }
+        });
+        return cocktails.stream()
+            .map(CocktailDetailsDTO.CocktailListDTO::new)
+            .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -60,9 +61,16 @@ public class CocktailController {
             return ResponseEntity.notFound().build();
         }
         Cocktail cocktail = cocktailOpt.get();
-        List<CocktailIngredient> ingredients = cocktailIngredientRepository.findByCocktail_IdCocktail(id);
-        List<CocktailTaillePrix> taillesPrix = cocktailTaillePrixRepository.findByCocktail_IdCocktail(id);
-        CocktailDetailsDTO dto = CocktailDetailsDTO.fromEntities(cocktail, ingredients, taillesPrix);
+        List<CocktailDetailsDTO.IngredientDTO> ingredients = cocktail.getIngredients().stream()
+            .map(CocktailDetailsDTO.IngredientDTO::new)
+            .collect(Collectors.toList());
+        List<CocktailDetailsDTO.TaillePrixDTO> taillesPrix = cocktail.getTaillesPrix().stream()
+            .map(CocktailDetailsDTO.TaillePrixDTO::new)
+            .collect(Collectors.toList());
+        CocktailDetailsDTO dto = new CocktailDetailsDTO();
+        dto.setCocktail(new CocktailDetailsDTO.CocktailDTO(cocktail));
+        dto.setIngredients(ingredients);
+        dto.setTaillesPrix(taillesPrix);
         return ResponseEntity.ok(dto);
     }
 
@@ -135,5 +143,26 @@ public class CocktailController {
         }
         cocktailRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/details")
+    public ResponseEntity<CocktailDetailsDTO> getCocktailDetails(@PathVariable Integer id) {
+        Optional<Cocktail> cocktailOpt = cocktailRepository.findById(id);
+        if (cocktailOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Cocktail cocktail = cocktailOpt.get();
+        // Récupérer les ingrédients et tailles/prix via les vues SQL, mais mapper vers les bons DTO internes
+        List<CocktailDetailsDTO.IngredientDTO> ingredients = cocktail.getIngredients().stream()
+            .map(CocktailDetailsDTO.IngredientDTO::new)
+            .collect(Collectors.toList());
+        List<CocktailDetailsDTO.TaillePrixDTO> taillesPrix = cocktail.getTaillesPrix().stream()
+            .map(CocktailDetailsDTO.TaillePrixDTO::new)
+            .collect(Collectors.toList());
+        CocktailDetailsDTO dto = new CocktailDetailsDTO();
+        dto.setCocktail(new CocktailDetailsDTO.CocktailDTO(cocktail));
+        dto.setIngredients(ingredients);
+        dto.setTaillesPrix(taillesPrix);
+        return ResponseEntity.ok(dto);
     }
 }
