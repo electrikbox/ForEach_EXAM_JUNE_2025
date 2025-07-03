@@ -9,7 +9,7 @@ const cocktailLink = "/cocktails"
 const mesCommandesLink = "/mes-commandes"
 const panierLink = "/panier"
 const logoutLink = "/logout"
-const adminLink = "/admin"
+const adminLink = "/admin/commandes"
 
 const route = useRoute()
 

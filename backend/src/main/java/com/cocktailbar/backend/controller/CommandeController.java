@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,6 +48,14 @@ public class CommandeController {
         this.utilisateurRepository = utilisateurRepository;
         this.cocktailRepository = cocktailRepository;
         this.tailleRepository = tailleRepository;
+    }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ROLE_Barmaker')")
+    public List<CommandeResponseDTO> getAllCommandesAdmin() {
+        return commandeRepository.findAll().stream()
+            .map(CommandeResponseDTO::fromCommande)
+            .collect(Collectors.toList());
     }
 
     @GetMapping
@@ -132,6 +141,30 @@ public class CommandeController {
         } else if (updatedCommande.getUtilisateur() == null) {
             return ResponseEntity.badRequest().build();
         }
+
+        Commande savedCommande = commandeRepository.save(existingCommande);
+        return ResponseEntity.ok(CommandeResponseDTO.fromCommande(savedCommande));
+    }
+
+    @PutMapping("/{id}/statut")
+    @PreAuthorize("hasRole('ROLE_Barmaker')")
+    public ResponseEntity<CommandeResponseDTO> updateStatutCommande(
+            @PathVariable Integer id,
+            @RequestBody Map<String, String> statutUpdate) {
+        
+        Optional<Commande> existingCommandeOptional = commandeRepository.findById(id);
+
+        if (existingCommandeOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String nouveauStatut = statutUpdate.get("statutCommande");
+        if (nouveauStatut == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Commande existingCommande = existingCommandeOptional.get();
+        existingCommande.setStatutCommande(nouveauStatut);
 
         Commande savedCommande = commandeRepository.save(existingCommande);
         return ResponseEntity.ok(CommandeResponseDTO.fromCommande(savedCommande));

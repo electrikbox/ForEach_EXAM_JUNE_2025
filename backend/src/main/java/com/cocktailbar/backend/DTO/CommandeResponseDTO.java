@@ -16,6 +16,7 @@ public class CommandeResponseDTO {
     private String statutCommande;
     private List<LigneCommandeDTO> lignes;
     private BigDecimal total;
+    private UtilisateurDTO utilisateur;
 
     @Data
     public static class LigneCommandeDTO {
@@ -26,11 +27,25 @@ public class CommandeResponseDTO {
         private BigDecimal prix;
     }
 
+    @Data
+    public static class UtilisateurDTO {
+        private Integer id;
+        private String email;
+        private String role;
+    }
+
     public static CommandeResponseDTO fromCommande(Commande commande) {
         CommandeResponseDTO dto = new CommandeResponseDTO();
         dto.setIdCommande(commande.getIdCommande());
         dto.setDateCommande(commande.getDateCommande());
         dto.setStatutCommande(commande.getStatutCommande());
+        
+        // Ajout des informations de l'utilisateur
+        UtilisateurDTO utilisateurDTO = new UtilisateurDTO();
+        utilisateurDTO.setId(commande.getUtilisateur().getIdUtilisateur());
+        utilisateurDTO.setEmail(commande.getUtilisateur().getEmailUtilisateur());
+        utilisateurDTO.setRole(commande.getUtilisateur().getRoleUtilisateur());
+        dto.setUtilisateur(utilisateurDTO);
         
         List<LigneCommandeDTO> lignesDTO = commande.getLignes().stream()
             .map(ligne -> {
