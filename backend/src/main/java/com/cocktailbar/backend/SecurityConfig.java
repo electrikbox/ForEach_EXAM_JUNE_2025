@@ -52,6 +52,7 @@ public class SecurityConfig {
                 auth
                     // .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/actuator/health/**").permitAll()
                     .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/**").permitAll()
                     .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/commandes").hasAuthority("ROLE_Client")
                     .anyRequest().authenticated();
@@ -104,7 +105,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(java.util.List.of("http://localhost:5173", "http://127.0.0.1:5173"));
+        configuration.setAllowedOrigins(java.util.List.of("http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:80", "http://localhost"));
         configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(java.util.List.of("*"));
         configuration.setAllowCredentials(true);
