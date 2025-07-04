@@ -44,9 +44,9 @@ public class CocktailController {
         List<Cocktail> cocktails = cocktailRepository.findAll();
         // Force l'initialisation des relations
         cocktails.forEach(cocktail -> {
-            cocktail.getTaillesPrix().size(); // Force l'initialisation
+            cocktail.getTaillesPrix().size();
             if (cocktail.getCategorie() != null) {
-                cocktail.getCategorie().getNomCategorie(); // Force l'initialisation
+                cocktail.getCategorie().getNomCategorie();
             }
         });
         return cocktails.stream()
