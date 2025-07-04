@@ -1,9 +1,5 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 
-LABEL maintainer="CocktailBar Team"
-LABEL version="1.0"
-LABEL description="Backend Spring Boot application for CocktailBar"
-
 WORKDIR /app
 
 COPY pom.xml .
