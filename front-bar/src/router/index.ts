@@ -27,7 +27,7 @@ const router = createRouter({
     }
   ],
   scrollBehavior() {
-    return { top: 0 } // scroll en haut à chaque navigation
+    return { top: 0 }
   }
 })
 
